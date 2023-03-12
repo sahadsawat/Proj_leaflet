@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/screens/category_screen.dart';
+import 'package:leaflet_application/screens/location_screen.dart';
 
 class alldbscreens extends StatelessWidget {
   @override
@@ -23,6 +24,23 @@ class alldbscreens extends StatelessWidget {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return category_screen();
+                    }));
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.add),
+                  label:
+                      Text("Location(พื้นที่)", style: TextStyle(fontSize: 20)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return location_screen();
                     }));
                   },
                 ),
