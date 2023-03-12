@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/screens/category_screen.dart';
+import 'package:leaflet_application/screens/faculty_screen.dart';
 import 'package:leaflet_application/screens/location_screen.dart';
 
 class alldbscreens extends StatelessWidget {
@@ -41,6 +42,22 @@ class alldbscreens extends StatelessWidget {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return location_screen();
+                    }));
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.add),
+                  label: Text("Faculty(คณะ)", style: TextStyle(fontSize: 20)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return faculty_screen();
                     }));
                   },
                 ),
