@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/screens/alldb_screens.dart';
-import 'package:leaflet_application/screens/category_screen.dart';
 
 void main() {
   runApp(

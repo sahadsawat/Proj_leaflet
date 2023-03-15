@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'package:http/http.dart'
     as http; // add the http plugin in pubspec.yaml file.
 import 'package:leaflet_application/models/major.dart';
+import 'package:leaflet_application/models/major2.dart';
 
 class major_service {
   static const String ROOT = 'http://10.0.2.2/LeafletDB/major_action.php';
+  //test
   // static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
+  static const _GET_ALL_ACTION2 = 'GET_ALL2';
   static const _ADD_MAJOR_ACTION = 'ADD_MAJOR';
   static const _UPDATE_MAJOR_ACTION = 'UPDATE_MAJOR';
   static const _DELETE_MAJOR_ACTION = 'DELETE_MAJOR';
@@ -28,9 +31,31 @@ class major_service {
     }
   }
 
+  static Future<List<major2>> getmajor2() async {
+    try {
+      var map2 = Map<String, dynamic>();
+      map2['action'] = _GET_ALL_ACTION2;
+      final response2 = await http.post(Uri.parse(ROOT), body: map2);
+      print('getfaculty Response: ${response2.body}');
+      if (200 == response2.statusCode) {
+        List<major2> list2 = parseResponse2(response2.body);
+        return list2;
+      } else {
+        return <major2>[];
+      }
+    } catch (e) {
+      return <major2>[]; // return an empty list on exception/error
+    }
+  }
+
   static List<major> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<major>((json) => major.fromJson(json)).toList();
+  }
+
+  static List<major2> parseResponse2(String responseBody2) {
+    final parsed2 = json.decode(responseBody2).cast<Map<String, dynamic>>();
+    return parsed2.map<major2>((json) => major2.fromJson(json)).toList();
   }
 
   // Method to add major to the database...

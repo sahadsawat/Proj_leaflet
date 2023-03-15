@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/major.dart';
+import 'package:leaflet_application/models/major2.dart';
 import 'package:leaflet_application/widgets/ma_service.dart';
+
+import 'package:http/http.dart' as http;
 
 class major_screen extends StatefulWidget {
   //
@@ -36,11 +40,15 @@ class major_screenState extends State<major_screen> {
   late TextEditingController _majornameController;
   // controller for the Last Name TextField we are going to create.
   late TextEditingController _facController;
+
   late major _selectedmajor;
   late bool _isUpdating;
   late String _titleProgress;
+  //debounce
   final _debouncer = Debouncer(milliseconds: 500);
-
+  //drop down
+  String? selectedFacName;
+  List<major2>? _facnameSelected;
   @override
   void initState() {
     super.initState();
@@ -51,6 +59,8 @@ class major_screenState extends State<major_screen> {
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
     _majornameController = TextEditingController();
     _facController = TextEditingController();
+    _facnameSelected = [];
+    _getmajor2();
     _getmajor();
   }
 
@@ -70,17 +80,18 @@ class major_screenState extends State<major_screen> {
   }
 
   _addmajor() {
-    if (_majornameController.text.isEmpty || _facController.text.isEmpty) {
+    if (_majornameController.text.isEmpty || _facnameSelected!.isEmpty) {
       print('Empty Fields');
       return;
     }
     _showProgress('Adding major...');
     major_service
-        .addmajor(_majornameController.text, _facController.text)
+        .addmajor(_majornameController.text, selectedFacName!)
         .then((result) {
       if ('success' == result) {
         _getmajor(); // Refresh the List after adding each employee...
         _clearValues();
+        _getmajor2();
       }
     });
   }
@@ -97,6 +108,17 @@ class major_screenState extends State<major_screen> {
     });
   }
 
+  _getmajor2() {
+    _showProgress('Loading major...');
+    major_service.getmajor2().then((major2) {
+      setState(() {
+        _facnameSelected = major2;
+      });
+      _showProgress(widget.title); // Reset the title...
+      print("Length ${major2.length}");
+    });
+  }
+
   _updatemajor(major major) {
     setState(() {
       _isUpdating = true;
@@ -104,7 +126,7 @@ class major_screenState extends State<major_screen> {
     _showProgress('Updating major...');
     major_service
         .updatemajor(
-            major.Major_id, _majornameController.text, _facController.text)
+            major.Major_id, _majornameController.text, selectedFacName!)
         .then((result) {
       if ('success' == result) {
         _getmajor(); // Refresh the list after update
@@ -128,12 +150,11 @@ class major_screenState extends State<major_screen> {
   // Method to clear TextField values
   _clearValues() {
     _majornameController.text = '';
-    _facController.text = '';
   }
 
   _showValues(major major) {
     _majornameController.text = major.Major_name;
-    _facController.text = major.Fac_id;
+    _facController.text = major.Fac_name;
   }
 
   // Let's create a DataTable and show the employee list in it.
@@ -193,7 +214,7 @@ class major_screenState extends State<major_screen> {
                     ),
                     DataCell(
                       Text(
-                        major.Fac_id.toUpperCase(),
+                        major.Fac_name.toUpperCase(),
                       ),
                       onTap: () {
                         _showValues(major);
@@ -259,6 +280,7 @@ class major_screenState extends State<major_screen> {
             icon: Icon(Icons.refresh),
             onPressed: () {
               _getmajor();
+              _getmajor2();
             },
           )
         ],
@@ -267,21 +289,40 @@ class major_screenState extends State<major_screen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Padding(
+            //   padding: EdgeInsets.all(20.0),
+            //   child: DropdownButtonFaculty(),
+            // ),
+            Padding(
+                padding: EdgeInsets.all(20.0),
+                child: DropdownButtonFormField(
+                    isExpanded: true,
+                    hint: Text("Select Faculty"),
+                    value: selectedFacName,
+                    items: _facnameSelected?.map((major2) {
+                      return DropdownMenuItem(
+                        child: Text(major2.Fac_name),
+                        value: major2.Fac_id.toString(),
+                      );
+                    }).toList(),
+                    // validator: (selectedFacName) {
+                    //   if (selectedFacName == null) {
+                    //     return 'Relationship is required';
+                    //   }
+                    //   return null;
+                    // },
+                    onChanged: (major2) {
+                      setState(() {
+                        selectedFacName = major2!;
+                      });
+                    })),
+
             Padding(
               padding: EdgeInsets.all(20.0),
               child: TextField(
                 controller: _majornameController,
                 decoration: InputDecoration.collapsed(
                   hintText: 'major Name',
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: TextField(
-                controller: _facController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Faculty Name',
                 ),
               ),
             ),
@@ -293,6 +334,7 @@ class major_screenState extends State<major_screen> {
                       OutlinedButton(
                         child: Text('UPDATE'),
                         onPressed: () {
+                          _updatemajor(_selectedmajor);
                           _updatemajor(_selectedmajor);
                         },
                       ),
@@ -324,3 +366,63 @@ class major_screenState extends State<major_screen> {
     );
   }
 }
+
+// class DropdownButtonFaculty extends StatefulWidget {
+//   const DropdownButtonFaculty({super.key});
+
+//   @override
+//   State<DropdownButtonFaculty> createState() => _DropdownButtonFaculty();
+// }
+
+// class _DropdownButtonFaculty extends State<DropdownButtonFaculty> {
+//   Future getAllName() async {
+//     var response = await http
+//         .get(Uri.parse("http://10.0.2.2/LeafletDB/major_faclist_action.php"));
+//     var jsonBody = response.body;
+//     var jsonData = json.decode(jsonBody);
+
+//     if (response.body.isNotEmpty) {
+//       json.decode(response.body);
+//     }
+//     setState(() {
+//       list = jsonData;
+//     });
+//     print(jsonData);
+//     return "success1";
+//   }
+
+//   String? dropdownValue;
+//   List list = [];
+//   @override
+//   void initState() {
+//     super.initState();
+//     getAllName();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return DropdownButton<String>(
+//       value: dropdownValue,
+//       items: list.map((list) {
+//         return DropdownMenuItem(
+//           child: Text(list['fac_name']),
+//           value: list['fac_id'].toString(),
+//         );
+//       }).toList(),
+//       icon: const Icon(Icons.arrow_downward),
+//       elevation: 16,
+//       isExpanded: true,
+//       style: const TextStyle(
+//         color: Colors.black,
+//       ),
+//       underline: Container(
+//         height: 2,
+//       ),
+//       onChanged: (value) {
+//         setState(() {
+//           dropdownValue = value;
+//         });
+//       },
+//     );
+//   }
+// }
