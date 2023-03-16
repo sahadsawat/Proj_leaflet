@@ -34,10 +34,11 @@ class locat_service {
   }
 
   // Method to add category to the database...
-  static Future<String> addlocation(String locat_name) async {
+  static Future<String> addlocation(String locat_no, String locat_name) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_LOCAT_ACTION;
+      map['locat_no'] = locat_no;
       map['locat_name'] = locat_name;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('addLocation Response: ${response.body}');
@@ -54,11 +55,12 @@ class locat_service {
 
   // Method to update an location in Database...
   static Future<String> updatelocation(
-      String locat_id, String locat_name) async {
+      String locat_id, String locat_no, String locat_name) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_LOCAT_ACTION;
       map['locat_id'] = locat_id;
+      map['locat_no'] = locat_no;
       map['locat_name'] = locat_name;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('updateLocation Response: ${response.body}');

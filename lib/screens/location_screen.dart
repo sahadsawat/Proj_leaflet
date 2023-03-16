@@ -2,12 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/location.dart';
 import 'package:leaflet_application/widgets/locat_service.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class location_screen extends StatefulWidget {
   //
   location_screen() : super();
 
-  final String title = 'LocationDataTable(พื้นที่)';
+  final String title = 'LocationDataTable(สถานที่)';
 
   @override
   location_screenState createState() => location_screenState();
@@ -32,7 +33,9 @@ class location_screenState extends State<location_screen> {
   late List<location> _location;
   late List<location> _filterlocation;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // controller for the First Name TextField we are going to create.
+  late TextEditingController _locatnoController;
   late TextEditingController _locatnameController;
   // controller for the Last Name TextField we are going to create.
   late location _selectedlocation;
@@ -48,6 +51,7 @@ class location_screenState extends State<location_screen> {
     _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
+    _locatnoController = TextEditingController();
     _locatnameController = TextEditingController();
     _getlocation();
   }
@@ -68,12 +72,15 @@ class location_screenState extends State<location_screen> {
   }
 
   _addlocation() {
-    if (_locatnameController.text.isEmpty) {
+    if (_locatnoController.text.isEmpty || _locatnameController.text.isEmpty) {
       print('Empty Fields');
+
       return;
     }
-    _showProgress('Adding Location...');
-    locat_service.addlocation(_locatnameController.text).then((result) {
+    _showProgress('Adding Category...');
+    locat_service
+        .addlocation(_locatnoController.text, _locatnameController.text)
+        .then((result) {
       if ('success' == result) {
         _getlocation(); // Refresh the List after adding each employee...
         _clearValues();
@@ -82,7 +89,7 @@ class location_screenState extends State<location_screen> {
   }
 
   _getlocation() {
-    _showProgress('Loading location...');
+    _showProgress('Loading category...');
     locat_service.getlocation().then((location) {
       setState(() {
         _location = location;
@@ -97,9 +104,10 @@ class location_screenState extends State<location_screen> {
     setState(() {
       _isUpdating = true;
     });
-    _showProgress('Updating location...');
+    _showProgress('Updating category...');
     locat_service
-        .updatelocation(location.Locat_id, _locatnameController.text)
+        .updatelocation(location.Locat_id, _locatnoController.text,
+            _locatnameController.text)
         .then((result) {
       if ('success' == result) {
         _getlocation(); // Refresh the list after update
@@ -112,7 +120,7 @@ class location_screenState extends State<location_screen> {
   }
 
   _deletelocation(location location) {
-    _showProgress('Deleting location...');
+    _showProgress('Deleting category...');
     locat_service.deletelocation(location.Locat_id).then((result) {
       if ('success' == result) {
         _getlocation(); // Refresh after delete...
@@ -122,10 +130,12 @@ class location_screenState extends State<location_screen> {
 
   // Method to clear TextField values
   _clearValues() {
+    _locatnoController.text = '';
     _locatnameController.text = '';
   }
 
   _showValues(location location) {
+    _locatnoController.text = location.Locat_no;
     _locatnameController.text = location.Locat_name;
   }
 
@@ -155,7 +165,7 @@ class location_screenState extends State<location_screen> {
                 (location) => DataRow(
                   cells: [
                     DataCell(
-                      Text(location.Locat_id),
+                      Text(location.Locat_no),
                       // Add tap in the row and populate the
                       // textfields with the corresponding values to update
                       onTap: () {
@@ -203,7 +213,7 @@ class location_screenState extends State<location_screen> {
       child: TextField(
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(5.0),
-          hintText: 'Filter by Location',
+          hintText: 'Filter by location',
         ),
         onChanged: (string) {
           // We will start filtering when the user types in the textfield.
@@ -243,13 +253,34 @@ class location_screenState extends State<location_screen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: TextField(
-                controller: _locatnameController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Location Name',
-                ),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: _locatnoController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Location Number',
+                      ),
+                      validator: RequiredValidator(
+                          errorText: "please record location number"),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: _locatnameController,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Location Name',
+                      ),
+                      validator: RequiredValidator(
+                          errorText: "please record location name"),
+                    ),
+                  ),
+                ],
               ),
             ),
             // Add an update button and a Cancel Button
@@ -284,7 +315,9 @@ class location_screenState extends State<location_screen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addlocation();
+          if (formKey.currentState!.validate()) {
+            _addlocation();
+          }
         },
         child: Icon(Icons.add),
       ),

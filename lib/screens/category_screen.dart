@@ -265,10 +265,8 @@ class category_screenState extends State<category_screen> {
                       decoration: InputDecoration.collapsed(
                         hintText: 'Category Number',
                       ),
-                      validator: MultiValidator([
-                        RequiredValidator(
-                            errorText: "please record category number"),
-                      ]),
+                      validator: RequiredValidator(
+                          errorText: "please record category number"),
                     ),
                   ),
                   Padding(
@@ -278,10 +276,8 @@ class category_screenState extends State<category_screen> {
                       decoration: InputDecoration.collapsed(
                         hintText: 'Category Name',
                       ),
-                      validator: MultiValidator([
-                        RequiredValidator(
-                            errorText: "please record category name"),
-                      ]),
+                      validator: RequiredValidator(
+                          errorText: "please record category name"),
                     ),
                   ),
                 ],

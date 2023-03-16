@@ -59,10 +59,12 @@ class major_service {
   }
 
   // Method to add major to the database...
-  static Future<String> addmajor(String major_name, String fac_id) async {
+  static Future<String> addmajor(
+      String major_no, String major_name, String fac_id) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_MAJOR_ACTION;
+      map['major_no'] = major_no;
       map['major_name'] = major_name;
       map['fac_id'] = fac_id;
       final response = await http.post(Uri.parse(ROOT), body: map);
@@ -79,12 +81,13 @@ class major_service {
   }
 
   // Method to update an major in Database...
-  static Future<String> updatemajor(
-      String major_id, String major_name, String fac_id) async {
+  static Future<String> updatemajor(String major_id, String major_no,
+      String major_name, String fac_id) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_MAJOR_ACTION;
       map['major_id'] = major_id;
+      map['major_no'] = major_no;
       map['major_name'] = major_name;
       map['fac_id'] = fac_id;
       final response = await http.post(Uri.parse(ROOT), body: map);

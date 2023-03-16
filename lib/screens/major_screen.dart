@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/major.dart';
 import 'package:leaflet_application/models/major2.dart';
 import 'package:leaflet_application/widgets/ma_service.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class major_screen extends StatefulWidget {
   //
@@ -34,7 +35,9 @@ class major_screenState extends State<major_screen> {
   late List<major> _major;
   late List<major> _filtermajor;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // controller for the First Name TextField we are going to create.
+  late TextEditingController _majornoController;
   late TextEditingController _majornameController;
   // controller for the Last Name TextField we are going to create.
 
@@ -54,6 +57,7 @@ class major_screenState extends State<major_screen> {
     _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
+    _majornoController = TextEditingController();
     _majornameController = TextEditingController();
     _facnameSelected = [];
     _getmajor2();
@@ -76,13 +80,16 @@ class major_screenState extends State<major_screen> {
   }
 
   _addmajor() {
-    if (_majornameController.text.isEmpty || _selectedFacName == null) {
+    if (_majornoController.text.isEmpty ||
+        _majornameController.text.isEmpty ||
+        _selectedFacName == null) {
       print('Empty Fields');
       return;
     }
     _showProgress('Adding major...');
     major_service
-        .addmajor(_majornameController.text, _selectedFacName!)
+        .addmajor(_majornoController.text, _majornameController.text,
+            _selectedFacName!)
         .then((result) {
       if ('success' == result) {
         _getmajor(); // Refresh the List after adding each employee...
@@ -127,8 +134,8 @@ class major_screenState extends State<major_screen> {
     });
     _showProgress('Updating major...');
     major_service
-        .updatemajor(
-            major.Major_id, _majornameController.text, _selectedFacName!)
+        .updatemajor(major.Major_id, _majornoController.text,
+            _majornameController.text, _selectedFacName!)
         .then((result) {
       if ('success' == result) {
         _getmajor(); // Refresh the list after update
@@ -151,11 +158,13 @@ class major_screenState extends State<major_screen> {
 
   // Method to clear TextField values
   _clearValues() {
+    _majornoController.text = '';
     _majornameController.text = '';
     _selectedFacName = null;
   }
 
   _showValues(major major) {
+    _majornoController.text = major.Major_no;
     _majornameController.text = major.Major_name;
     // _facnameSelected == _selectedFacName;
   }
@@ -189,7 +198,7 @@ class major_screenState extends State<major_screen> {
                 (major) => DataRow(
                   cells: [
                     DataCell(
-                      Text(major.Major_id),
+                      Text(major.Major_no),
                       // Add tap in the row and populate the
                       // textfields with the corresponding values to update
                       onTap: () {
@@ -295,58 +304,57 @@ class major_screenState extends State<major_screen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Padding(
-            //   padding: EdgeInsets.all(20.0),
-            //   child: DropdownButtonFaculty(),
-            // ),
-            Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: DropdownButtonFormField(
-                  isExpanded: true,
-                  hint: const Text("Select Faculty"),
-                  value: _selectedFacName,
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: (value) =>
-                      (value == null) ? 'Please Select Faculty' : null,
-                  items: _facnameSelected.map((major2) {
-                    return DropdownMenuItem(
-                      value: major2.Fac_id.toString(),
-                      child: Text(major2.Fac_name),
-                    );
-                  }).toList(),
-                  // validator: (String? major2) {
-                  //   if (_selectedFacName != null) return 'Pls Select Faculty';
-                  //   return null;
-                  // },
-                  onChanged: (String? major2) {
-                    setState(() {
-                      _selectedFacName = major2!;
-                    });
-                  },
-
-                  // validator: (major2) {
-                  //   if (selectedFacName == null) {
-                  //     return 'Pls Select Faculty';
-                  //   }
-                  //   return null;
-                  // },
-                  // onChanged: (major2) =>
-                  //     setState(() => _selectedFacName = major2),
-                  // validator: (major2) =>
-                  //     major2 == null ? 'field required' : null,
-                )),
-
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: TextField(
-                controller: _majornameController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'major Name',
-                ),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: _majornoController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'major Number',
+                      ),
+                      validator: RequiredValidator(
+                          errorText: "please record Major number"),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: _majornameController,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'major Name',
+                      ),
+                      validator: RequiredValidator(
+                          errorText: "please record Major Name"),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: DropdownButtonFormField(
+                        isExpanded: true,
+                        hint: const Text("Select Faculty"),
+                        value: _selectedFacName,
+                        autovalidateMode: AutovalidateMode.always,
+                        validator: (value) =>
+                            (value == null) ? 'Please Select Faculty' : null,
+                        items: _facnameSelected.map((major2) {
+                          return DropdownMenuItem(
+                            value: major2.Fac_id.toString(),
+                            child: Text(major2.Fac_name),
+                          );
+                        }).toList(),
+                        onChanged: (String? major2) {
+                          setState(() {
+                            _selectedFacName = major2!;
+                          });
+                        },
+                      )),
+                ],
               ),
             ),
-            // Add an update button and a Cancel Button
-            // show these buttons only when updating an employee
             _isUpdating
                 ? Row(
                     children: <Widget>[
@@ -377,7 +385,9 @@ class major_screenState extends State<major_screen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addmajor();
+          if (formKey.currentState!.validate()) {
+            _addmajor();
+          }
         },
         child: Icon(Icons.add),
       ),

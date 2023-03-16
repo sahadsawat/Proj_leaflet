@@ -34,10 +34,11 @@ class fac_service {
   }
 
   // Method to add category to the database...
-  static Future<String> addfaculty(String fac_name) async {
+  static Future<String> addfaculty(String fac_no, String fac_name) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_FAC_ACTION;
+      map['fac_no'] = fac_no;
       map['fac_name'] = fac_name;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('addfaculty Response: ${response.body}');
@@ -53,11 +54,13 @@ class fac_service {
   }
 
   // Method to update an category in Database...
-  static Future<String> updatefaculty(String fac_id, String fac_name) async {
+  static Future<String> updatefaculty(
+      String fac_id, String fac_no, String fac_name) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_FAC_ACTION;
       map['fac_id'] = fac_id;
+      map['fac_no'] = fac_no;
       map['fac_name'] = fac_name;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('updatefaculty Response: ${response.body}');
