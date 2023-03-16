@@ -37,7 +37,6 @@ class major_screenState extends State<major_screen> {
   // controller for the First Name TextField we are going to create.
   late TextEditingController _majornameController;
   // controller for the Last Name TextField we are going to create.
-  late TextEditingController _facnameController;
 
   late major? _selectedmajor;
   late bool _isUpdating;
@@ -56,7 +55,6 @@ class major_screenState extends State<major_screen> {
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
     _majornameController = TextEditingController();
-    _facnameController = TextEditingController();
     _facnameSelected = [];
     _getmajor2();
     _getmajor();

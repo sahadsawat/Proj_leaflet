@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/category.dart';
 import 'package:leaflet_application/widgets/cate_service.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class category_screen extends StatefulWidget {
   //
@@ -32,7 +33,9 @@ class category_screenState extends State<category_screen> {
   late List<category> _category;
   late List<category> _filtercategory;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // controller for the First Name TextField we are going to create.
+  late TextEditingController _catenoController;
   late TextEditingController _catenameController;
   // controller for the Last Name TextField we are going to create.
   late category _selectedcategory;
@@ -48,6 +51,7 @@ class category_screenState extends State<category_screen> {
     _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
+    _catenoController = TextEditingController();
     _catenameController = TextEditingController();
     _getcategory();
   }
@@ -68,12 +72,15 @@ class category_screenState extends State<category_screen> {
   }
 
   _addcategory() {
-    if (_catenameController.text.isEmpty) {
+    if (_catenoController.text.isEmpty || _catenameController.text.isEmpty) {
       print('Empty Fields');
+
       return;
     }
     _showProgress('Adding Category...');
-    cate_service.addcategory(_catenameController.text).then((result) {
+    cate_service
+        .addcategory(_catenoController.text, _catenameController.text)
+        .then((result) {
       if ('success' == result) {
         _getcategory(); // Refresh the List after adding each employee...
         _clearValues();
@@ -99,7 +106,8 @@ class category_screenState extends State<category_screen> {
     });
     _showProgress('Updating category...');
     cate_service
-        .updatecategory(category.Cate_id, _catenameController.text)
+        .updatecategory(
+            category.Cate_id, _catenoController.text, _catenameController.text)
         .then((result) {
       if ('success' == result) {
         _getcategory(); // Refresh the list after update
@@ -122,10 +130,12 @@ class category_screenState extends State<category_screen> {
 
   // Method to clear TextField values
   _clearValues() {
+    _catenoController.text = '';
     _catenameController.text = '';
   }
 
   _showValues(category category) {
+    _catenoController.text = category.Cate_no;
     _catenameController.text = category.Cate_name;
   }
 
@@ -155,7 +165,7 @@ class category_screenState extends State<category_screen> {
                 (category) => DataRow(
                   cells: [
                     DataCell(
-                      Text(category.Cate_id),
+                      Text(category.Cate_no),
                       // Add tap in the row and populate the
                       // textfields with the corresponding values to update
                       onTap: () {
@@ -243,13 +253,38 @@ class category_screenState extends State<category_screen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: TextField(
-                controller: _catenameController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Category Name',
-                ),
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: _catenoController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Category Number',
+                      ),
+                      validator: MultiValidator([
+                        RequiredValidator(
+                            errorText: "please record category number"),
+                      ]),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: TextFormField(
+                      controller: _catenameController,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Category Name',
+                      ),
+                      validator: MultiValidator([
+                        RequiredValidator(
+                            errorText: "please record category name"),
+                      ]),
+                    ),
+                  ),
+                ],
               ),
             ),
             // Add an update button and a Cancel Button
@@ -284,7 +319,9 @@ class category_screenState extends State<category_screen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addcategory();
+          if (formKey.currentState!.validate()) {
+            _addcategory();
+          }
         },
         child: Icon(Icons.add),
       ),
