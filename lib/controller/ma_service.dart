@@ -3,6 +3,7 @@ import 'package:http/http.dart'
     as http; // add the http plugin in pubspec.yaml file.
 import 'package:leaflet_application/models/major.dart';
 import 'package:leaflet_application/models/major2.dart';
+import 'package:leaflet_application/models/major3.dart';
 
 class major_service {
   static const String ROOT = 'http://10.0.2.2/LeafletDB/major_action.php';
@@ -10,6 +11,7 @@ class major_service {
   // static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
   static const _GET_ALL_ACTION2 = 'GET_ALL2';
+  static const _GET_ALL_ACTION3 = 'GET_ALL3';
   static const _ADD_MAJOR_ACTION = 'ADD_MAJOR';
   static const _UPDATE_MAJOR_ACTION = 'UPDATE_MAJOR';
   static const _DELETE_MAJOR_ACTION = 'DELETE_MAJOR';
@@ -48,6 +50,24 @@ class major_service {
     }
   }
 
+  static Future<List<major3>> getmajor3(String fac_id) async {
+    try {
+      var map3 = Map<String, dynamic>();
+      map3['action'] = _GET_ALL_ACTION3;
+      map3['fac_id'] = fac_id;
+      final response3 = await http.post(Uri.parse(ROOT), body: map3);
+      print('getmajorfacResponse: ${response3.body}');
+      if (200 == response3.statusCode) {
+        List<major3> list3 = parseResponse3(response3.body);
+        return list3;
+      } else {
+        return <major3>[];
+      }
+    } catch (e) {
+      return <major3>[]; // return an empty list on exception/error
+    }
+  }
+
   static List<major> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<major>((json) => major.fromJson(json)).toList();
@@ -56,6 +76,11 @@ class major_service {
   static List<major2> parseResponse2(String responseBody2) {
     final parsed2 = json.decode(responseBody2).cast<Map<String, dynamic>>();
     return parsed2.map<major2>((json) => major2.fromJson(json)).toList();
+  }
+
+  static List<major3> parseResponse3(String responseBody3) {
+    final parsed3 = json.decode(responseBody3).cast<Map<String, dynamic>>();
+    return parsed3.map<major3>((json) => major3.fromJson(json)).toList();
   }
 
   // Method to add major to the database...

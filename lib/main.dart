@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => Register(),
+                            builder: (context) => Register_screen(),
                           ),
                         );
                       },

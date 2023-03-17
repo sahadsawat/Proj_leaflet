@@ -4,15 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:leaflet_application/DashBoard.dart';
+import 'package:leaflet_application/controller/fac_service.dart';
 import 'package:leaflet_application/main.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:leaflet_application/models/faculty.dart';
+import 'package:leaflet_application/models/major.dart';
+import 'package:leaflet_application/models/major2.dart';
+import 'package:leaflet_application/models/major3.dart';
+import 'package:leaflet_application/controller/ma_service.dart';
 
-class Register extends StatefulWidget {
+class Register_screen extends StatefulWidget {
   @override
-  _RegisterState createState() => _RegisterState();
+  _Register_screenState createState() => _Register_screenState();
 }
 
-class _RegisterState extends State<Register> {
+class _Register_screenState extends State<Register_screen> {
   TextEditingController userid = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController username = TextEditingController();
@@ -21,6 +27,22 @@ class _RegisterState extends State<Register> {
   TextEditingController userfac = TextEditingController();
   TextEditingController usermajor = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  //drop down
+  String? _selectedFacName;
+  String? _selectedmajorName;
+
+  late List<major2> _facnameSelected;
+  late List<major> _majornameSelected;
+  late List<major3> _majornameSelected3;
+  late List item;
+  @override
+  void initState() {
+    super.initState();
+    _facnameSelected = [];
+    _majornameSelected = [];
+    _majornameSelected3 = [];
+    _getmajor2();
+  }
 
   Future register() async {
     var url = "http://10.0.2.2/LeafletDB/register_action.php";
@@ -31,7 +53,7 @@ class _RegisterState extends State<Register> {
       "user_tel": usertel.text,
       "user_email": useremail.text,
       // "user_password": userfac.text,
-      // "major_id": usermajor.text,
+      "major_id": _selectedmajorName,
     });
     if (response.body.isNotEmpty) {
       json.decode(response.body);
@@ -52,7 +74,7 @@ class _RegisterState extends State<Register> {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0);
       Navigator.push(
@@ -62,6 +84,43 @@ class _RegisterState extends State<Register> {
         ),
       );
     }
+  }
+
+  _getmajor(fac_id) {
+    // _showProgress('Loading major...');
+    _selectedmajorName = null;
+    if (fac_id != '' || fac_id != null) {
+      //! query data where ด้วย fac_id
+
+      major_service.getmajor3(fac_id).then((major3) {
+        // major.forEach((var data) => {
+        //       if (data.Fac_id == fac_id) {print(data)}
+        //     });
+        setState(() {
+          _majornameSelected3 = major3;
+        });
+
+        // _clearValues();
+        // _showProgress(widget.title); // Reset the title...
+        // print("Length ${major.length}");
+      });
+    } else {
+      setState(() {
+        _majornameSelected3 = [];
+      });
+    }
+  }
+
+  _getmajor2() {
+    // _showProgress('Loading major...');
+    major_service.getmajor2().then((major2) {
+      setState(() {
+        _facnameSelected = major2;
+      });
+      // _clearValues();
+      // _showProgress(widget.title); // Reset the title...
+      // print("Length ${major2.length}");
+    });
   }
 
   @override
@@ -167,18 +226,72 @@ class _RegisterState extends State<Register> {
                     ]),
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: TextField(
-                //     decoration: InputDecoration(
-                //       labelText: 'Faculty',
-                //       prefixIcon: Icon(Icons.person),
-                //       border: OutlineInputBorder(
-                //           borderRadius: BorderRadius.circular(8)),
-                //     ),
-                //     controller: userfac,
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Faculty',
+                        // prefixIcon: Icon(
+                        //   Icons.,
+                        // ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      value: _selectedFacName,
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) =>
+                          (value == null) ? 'Please Select Faculty' : null,
+                      items: _facnameSelected.map((faculty) {
+                        return DropdownMenuItem(
+                          value: faculty.Fac_id.toString(),
+                          child: Text(faculty.Fac_name),
+                        );
+                      }).toList(),
+                      onChanged: (String? faculty) {
+                        setState(() {
+                          _selectedFacName = faculty!;
+                          // set ค่า major ให้เป้นค่าว่างก่อน
+                          _getmajor(
+                              _selectedFacName); // ส่งค่า fac id ไป function get major
+                        });
+                      },
+                    )),
+                // child: TextField(
+                //   decoration: InputDecoration(
+                //     labelText: 'Faculty',
+                //     prefixIcon: Icon(Icons.person),
+                //     border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(8)),
                 //   ),
+                //   controller: userfac,
                 // ),
+                Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Major',
+                        // prefixIcon: Icon(
+                        //   Icons.,
+                        // ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                      ),
+                      value: _selectedmajorName,
+                      autovalidateMode: AutovalidateMode.always,
+                      validator: (value) =>
+                          (value == null) ? 'Please Select Major' : null,
+                      items: _majornameSelected3.map((major) {
+                        return DropdownMenuItem(
+                          value: major.Major_id.toString(),
+                          child: Text(major.Major_name),
+                        );
+                      }).toList(),
+                      onChanged: (String? major) {
+                        setState(() {
+                          _selectedmajorName = major!;
+                        });
+                      },
+                    )),
                 // Padding(
                 //   padding: const EdgeInsets.all(8.0),
                 //   child: TextField(
