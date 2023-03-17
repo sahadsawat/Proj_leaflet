@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/category.dart';
-import 'package:leaflet_application/widgets/cate_service.dart';
+import 'package:leaflet_application/controller/cate_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 class category_screen extends StatefulWidget {

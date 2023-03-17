@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/faculty.dart';
-import 'package:leaflet_application/widgets/fac_service.dart';
+import 'package:leaflet_application/controller/fac_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 class faculty_screen extends StatefulWidget {

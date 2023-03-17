@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/location.dart';
-import 'package:leaflet_application/widgets/locat_service.dart';
+import 'package:leaflet_application/controller/locat_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 class location_screen extends StatefulWidget {

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/major.dart';
 import 'package:leaflet_application/models/major2.dart';
-import 'package:leaflet_application/widgets/ma_service.dart';
+import 'package:leaflet_application/controller/ma_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
 class major_screen extends StatefulWidget {
