@@ -7,7 +7,6 @@ import 'package:leaflet_application/DashBoard.dart';
 import 'package:leaflet_application/controller/fac_service.dart';
 import 'package:leaflet_application/main.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:leaflet_application/models/faculty.dart';
 import 'package:leaflet_application/models/major.dart';
 import 'package:leaflet_application/models/major2.dart';
 import 'package:leaflet_application/models/major3.dart';
@@ -21,7 +20,8 @@ class Register_screen extends StatefulWidget {
 class _Register_screenState extends State<Register_screen> {
   TextEditingController userid = TextEditingController();
   TextEditingController password = TextEditingController();
-  TextEditingController username = TextEditingController();
+  TextEditingController firstname = TextEditingController();
+  TextEditingController lastname = TextEditingController();
   TextEditingController usertel = TextEditingController();
   TextEditingController useremail = TextEditingController();
   TextEditingController userfac = TextEditingController();
@@ -49,7 +49,8 @@ class _Register_screenState extends State<Register_screen> {
     var response = await http.post(Uri.parse(url), body: {
       "user_id": userid.text,
       "user_password": password.text,
-      "user_name": username.text,
+      "first_name": firstname.text,
+      "last_name": lastname.text,
       "user_tel": usertel.text,
       "user_email": useremail.text,
       // "user_password": userfac.text,
@@ -128,9 +129,10 @@ class _Register_screenState extends State<Register_screen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Login SignUp',
+          'Leaflet Application',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.greenAccent,
       ),
       body: Container(
         child: Form(
@@ -178,14 +180,30 @@ class _Register_screenState extends State<Register_screen> {
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Username / surname',
+                      labelText: 'First Name',
                       prefixIcon: Icon(
                         Icons.person_outline,
                       ),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    controller: username,
+                    controller: firstname,
+                    validator: RequiredValidator(
+                        errorText: "please record username/surname"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Last Name',
+                      prefixIcon: Icon(
+                        Icons.person_outline,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                    controller: lastname,
                     validator: RequiredValidator(
                         errorText: "please record username/surname"),
                   ),
@@ -256,15 +274,6 @@ class _Register_screenState extends State<Register_screen> {
                         });
                       },
                     )),
-                // child: TextField(
-                //   decoration: InputDecoration(
-                //     labelText: 'Faculty',
-                //     prefixIcon: Icon(Icons.person),
-                //     border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(8)),
-                //   ),
-                //   controller: userfac,
-                // ),
                 Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButtonFormField(
@@ -292,18 +301,6 @@ class _Register_screenState extends State<Register_screen> {
                         });
                       },
                     )),
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: TextField(
-                //     decoration: InputDecoration(
-                //       labelText: 'Major',
-                //       prefixIcon: Icon(Icons.person),
-                //       border: OutlineInputBorder(
-                //           borderRadius: BorderRadius.circular(8)),
-                //     ),
-                //     controller: usermajor,
-                //   ),
-                // ),
                 Row(
                   children: <Widget>[
                     Expanded(
