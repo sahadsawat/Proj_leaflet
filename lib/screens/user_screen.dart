@@ -35,8 +35,8 @@ class user_screenState extends State<user_screen> {
   late GlobalKey<ScaffoldState> _scaffoldKey;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // controller for the First Name TextField we are going to create.
-  late TextEditingController _usernoController;
   late TextEditingController _useridController;
+  late TextEditingController _useremailController;
   // controller for the Last Name TextField we are going to create.
   late user _selecteduser;
   late bool _isUpdating;
@@ -51,8 +51,8 @@ class user_screenState extends State<user_screen> {
     _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
-    _usernoController = TextEditingController();
     _useridController = TextEditingController();
+    _useremailController = TextEditingController();
     _getuser();
   }
 
@@ -72,14 +72,14 @@ class user_screenState extends State<user_screen> {
   }
 
   _adduser() {
-    if (_usernoController.text.isEmpty || _useridController.text.isEmpty) {
+    if (_useridController.text.isEmpty || _useremailController.text.isEmpty) {
       print('Empty Fields');
 
       return;
     }
     _showProgress('Adding user...');
     user_service
-        .adduser(_usernoController.text, _useridController.text)
+        .adduser(_useridController.text, _useremailController.text)
         .then((result) {
       if ('success' == result) {
         _getuser(); // Refresh the List after adding each employee...
@@ -107,14 +107,15 @@ class user_screenState extends State<user_screen> {
     _showProgress('Updating user...');
     user_service
         .updateuser(
-            user.User_no,
-            _usernoController.text,
+            user.User_id,
+            _useremailController.text,
             _useridController.text,
             _useridController.text,
             _useridController.text,
             _useridController.text,
             _useridController.text,
-            _useridController.text)
+            _useridController.text
+            )
         .then((result) {
       if ('success' == result) {
         _getuser(); // Refresh the list after update
@@ -128,7 +129,7 @@ class user_screenState extends State<user_screen> {
 
   _deleteuser(user user) {
     _showProgress('Deleting user...');
-    user_service.deleteuser(user.User_no).then((result) {
+    user_service.deleteuser(user.User_id).then((result) {
       if ('success' == result) {
         _getuser(); // Refresh after delete...
       }
@@ -137,13 +138,13 @@ class user_screenState extends State<user_screen> {
 
   // Method to clear TextField values
   _clearValues() {
-    _usernoController.text = '';
     _useridController.text = '';
+    _useremailController.text = '';
   }
 
   _showValues(user user) {
-    _usernoController.text = user.User_no;
     _useridController.text = user.User_id;
+    _useremailController.text = user.User_email;
   }
 
   // Let's create a DataTable and show the employee list in it.
@@ -157,10 +158,10 @@ class user_screenState extends State<user_screen> {
         child: DataTable(
           columns: [
             DataColumn(
-              label: Text('No'),
+              label: Text('ID'),
             ),
             DataColumn(
-              label: Text('User_ID'),
+              label: Text('User_Email'),
             ),
             // Lets add one more column to show a delete button
             DataColumn(
@@ -172,7 +173,7 @@ class user_screenState extends State<user_screen> {
                 (user) => DataRow(
                   cells: [
                     DataCell(
-                      Text(user.User_no),
+                      Text(user.User_id),
                       // Add tap in the row and populate the
                       // textfields with the corresponding values to update
                       onTap: () {
@@ -186,7 +187,7 @@ class user_screenState extends State<user_screen> {
                     ),
                     DataCell(
                       Text(
-                        user.User_id.toUpperCase(),
+                        user.User_email,
                       ),
                       onTap: () {
                         _showValues(user);
@@ -267,24 +268,24 @@ class user_screenState extends State<user_screen> {
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: TextFormField(
-                      controller: _usernoController,
+                      controller: _useridController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration.collapsed(
-                        hintText: 'User Number',
+                        hintText: 'User ID',
                       ),
                       validator: RequiredValidator(
-                          errorText: "please record user number"),
+                          errorText: "please record user ID"),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: TextFormField(
-                      controller: _useridController,
+                      controller: _useremailController,
                       decoration: InputDecoration.collapsed(
-                        hintText: 'User Id',
+                        hintText: 'User E-mail',
                       ),
                       validator:
-                          RequiredValidator(errorText: "please record user id"),
+                          RequiredValidator(errorText: "please record user email"),
                     ),
                   ),
                 ],

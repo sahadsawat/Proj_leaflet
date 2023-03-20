@@ -34,12 +34,12 @@ class user_service {
   }
 
   // Method to add category to the database...
-  static Future<String> adduser(String user_no, String user_id) async {
+  static Future<String> adduser(String user_id, String user_email) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_USER_ACTION;
-      map['user_no'] = user_no;
       map['user_id'] = user_id;
+      map['user_email'] = user_email;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('addUser Response: ${response.body}');
       if (200 == response.statusCode) {
@@ -55,24 +55,24 @@ class user_service {
 
   // Method to update an category in Database...
   static Future<String> updateuser(
-      String user_no,
       String user_id,
+      String user_email,
       String user_password,
       String first_name,
       String last_name,
       String user_tel,
-      String user_email,
+      String user_lineid,
       String major_id) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_USER_ACTION;
-      map['user_no'] = user_no;
       map['user_id'] = user_id;
+      map['user_email'] = user_email;
       map['user_password'] = user_password;
       map['first_name'] = first_name;
       map['last_name'] = last_name;
       map['user_tel'] = user_tel;
-      map['user_email'] = user_email;
+      map['user_lineid'] = user_lineid;
       map['major_id'] = major_id;
 
       final response = await http.post(Uri.parse(ROOT), body: map);

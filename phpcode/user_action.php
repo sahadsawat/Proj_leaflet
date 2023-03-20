@@ -17,7 +17,7 @@ if ($conn->connect_error) {
 
 if('GET_ALL' == $action){
     $dbdata = array();
-    $sql = "SELECT user_no,user_id,user_password,first_name,last_name,user_tel,user_email,major_id FROM $table ORDER BY user_no DESC";
+    $sql = "SELECT user_id,user_email,user_password,first_name,last_name,user_tel,user_lineid,major_id FROM $table ORDER BY user_id DESC";
     $result = $conn->query($sql);
     if ($result->num_rows > 0) {
         while($row = $result->fetch_assoc()) {
@@ -32,30 +32,30 @@ if('GET_ALL' == $action){
 }
 
 if('ADD_USER' == $action){
-    $user_no = $_POST['user_no'];
     $user_id = $_POST['user_id'];
+    $user_email = $_POST['user_email'];
     $user_password = $_POST['user_password'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $user_tel = $_POST['user_tel'];
-    $user_email = $_POST['user_email'];
+    $user_lineid = $_POST['user_lineid'];
     $major_id = $_POST['major_id'];
-    $sql = "INSERT INTO $table (user_no,user_id,user_password,first_name,last_name,user_tel,user_email,major_id) VALUES('$user_no','$user_id','$user_password','$first_name','$last_name','$user_tel','$user_email','$major_id')";
+    $sql = "INSERT INTO $table (user_id,user_email,user_password,first_name,last_name,user_tel,user_lineid,major_id) VALUES('$user_id','$user_email','$user_password','$first_name','$last_name','$user_tel','$user_lineid','$major_id')";
     $result = $conn->query($sql);
     echo 'success';
     return;
 }
 
 if('UPDATE_USER' == $action){
-    $user_no = $_POST['user_no'];
     $user_id = $_POST['user_id'];
+    $user_email = $_POST['user_email'];
     $user_password = $_POST['user_password'];
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $user_tel = $_POST['user_tel'];
-    $user_email = $_POST['user_email'];
+    $user_lineid = $_POST['user_lineid'];
     $major_id = $_POST['major_id'];
-    $sql = "UPDATE $table SET user_no = '$user_no',user_id = '$user_id',user_password = '$user_password',first_name = '$first_name',last_name = '$last_name',user_tel = '$user_tel',user_email = '$user_email',major_id = '$major_id', WHERE user_id = $user_id";
+    $sql = "UPDATE $table SET user_id = '$user_id',user_email = '$user_email',user_password = '$user_password',first_name = '$first_name',last_name = '$last_name',user_tel = '$user_tel',user_lineid = '$user_lineid',major_id = '$major_id', WHERE user_email = $user_email";
     if ($conn->query($sql) === TRUE) {
         echo "success";
     } else {
