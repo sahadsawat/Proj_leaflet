@@ -6,12 +6,23 @@ import 'package:leaflet_application/screens/register_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'DashBoard.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  dynamic token = SessionManager().get('token');
   runApp(
-    MyApp(),
+    MaterialApp(
+      home: token != '' ? DashBoard() : MyApp(),
+    ),
   );
 }
+
+// void main() {
+//   runApp(
+//     MyApp(),
+//   );
+// }
 
 // class HomeApp extends StatelessWidget {
 //   const HomeApp({super.key});
@@ -56,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     var data = json.decode(response.body);
     if (data == "Success") {
+      await SessionManager().set('token', useremail.text);
       Fluttertoast.showToast(
           msg: "Login successful",
           toastLength: Toast.LENGTH_SHORT,
@@ -67,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => alldbscreens(),
+          builder: (context) => DashBoard(),
         ),
       );
     } else {
@@ -86,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           'Leaflet Application',
           style: TextStyle(fontWeight: FontWeight.bold),
