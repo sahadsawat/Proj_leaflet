@@ -13,7 +13,7 @@ void main() {
   dynamic token = SessionManager().get('token');
   runApp(
     MaterialApp(
-      home: token != '' ? DashBoard() : MyApp(),
+      home: token != '' ? HomeScreen() : MyApp(),
     ),
   );
 }
@@ -34,6 +34,7 @@ void main() {
 //     );
 //   }
 // }
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -59,6 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController useremail = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  bool _isHidden = true;
+  bool _authenticatingStatus = false;
+
   Future login() async {
     var url = "http://10.0.2.2/LeafletDB/login_action.php";
     var response = await http.post(Uri.parse(url), body: {
@@ -79,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DashBoard(),
+          builder: (context) => HomeScreen(),
         ),
       );
     } else {
@@ -119,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'User E-mail',
                   prefixIcon: Icon(Icons.person),
@@ -130,15 +140,26 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                obscureText: true,
+              child: TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: Icon(Icons.vpn_key),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isHidden = !_isHidden; // เมื่อกดก็เปลี่ยนค่าตรงกันข้าม
+                      });
+                    },
+                    icon: Icon(_isHidden // เงื่อนไขการสลับ icon
+                        ? Icons.visibility_off
+                        : Icons.visibility),
+                  ),
                 ),
-                controller: password,
+                controller: password, // ผูกกับ TextFormField ที่จะใช้
+                obscureText:
+                    _isHidden, // ก่อนซ่อนหรือแสดงข้อความในรูปแบบรหัสผ่าน
               ),
             ),
             Row(

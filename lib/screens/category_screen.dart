@@ -34,14 +34,12 @@ class category_screenState extends State<category_screen> {
   late List<category> _filtercategory;
   late GlobalKey<ScaffoldState> _scaffoldKey;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  // controller for the First Name TextField we are going to create.
-  late TextEditingController _catenoController;
-  late TextEditingController _catenameController;
-  // controller for the Last Name TextField we are going to create.
   late category _selectedcategory;
   late bool _isUpdating;
   late String _titleProgress;
   final _debouncer = Debouncer(milliseconds: 500);
+  late TextEditingController _catenoController;
+  late TextEditingController _catenameController;
 
   @override
   void initState() {
