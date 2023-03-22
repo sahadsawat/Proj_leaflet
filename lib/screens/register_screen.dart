@@ -28,18 +28,16 @@ class _Register_screenState extends State<Register_screen> {
   TextEditingController usermajor = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   //drop down
-  String? _selectedFacName;
+  String? _selectedfacName;
   String? _selectedmajorName;
 
   late List<major2> _facnameSelected;
-  late List<major> _majornameSelected;
   late List<major3> _majornameSelected3;
-  late List item;
+  // late List item;
   @override
   void initState() {
     super.initState();
     _facnameSelected = [];
-    _majornameSelected = [];
     _majornameSelected3 = [];
     _getmajor2();
   }
@@ -208,8 +206,8 @@ class _Register_screenState extends State<Register_screen> {
                           borderRadius: BorderRadius.circular(8)),
                     ),
                     controller: lastname,
-                    validator: RequiredValidator(
-                        errorText: "please record Last Name"),
+                    validator:
+                        RequiredValidator(errorText: "please record Last Name"),
                   ),
                 ),
                 Padding(
@@ -258,7 +256,7 @@ class _Register_screenState extends State<Register_screen> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),
-                      value: _selectedFacName,
+                      value: _selectedfacName,
                       autovalidateMode: AutovalidateMode.always,
                       validator: (value) =>
                           (value == null) ? 'Please Select Faculty' : null,
@@ -270,10 +268,10 @@ class _Register_screenState extends State<Register_screen> {
                       }).toList(),
                       onChanged: (String? faculty) {
                         setState(() {
-                          _selectedFacName = faculty!;
+                          _selectedfacName = faculty!;
                           // set ค่า major ให้เป้นค่าว่างก่อน
                           _getmajor(
-                              _selectedFacName); // ส่งค่า fac id ไป function get major
+                              _selectedfacName); // ส่งค่า fac id ไป function get major
                         });
                       },
                     )),

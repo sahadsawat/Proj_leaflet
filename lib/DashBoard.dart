@@ -76,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+//UI
 class DashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,7 @@ class DashBoard extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              SessionManager().set('token', '');
+              SessionManager().destroy();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -108,8 +109,9 @@ class DashBoard extends StatelessWidget {
           ),
           Center(
             child: FutureBuilder(
-                future: SessionManager().get('token'),
+                future: SessionManager().get("token"),
                 builder: (context, snapshot) {
+                  print(snapshot);
                   return Text(snapshot.hasData ? snapshot.data : 'Loading....');
                 }),
           ),

@@ -8,32 +8,32 @@ import 'package:http/http.dart' as http;
 import 'DashBoard.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  dynamic token = SessionManager().get('token');
-  runApp(
-    MaterialApp(
-      home: token != '' ? HomeScreen() : MyApp(),
-    ),
-  );
-}
-
 // void main() {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   dynamic token = SessionManager().get("token");
 //   runApp(
-//     MyApp(),
+//     MaterialApp(
+//       home: token != null ? HomeScreen() : MyApp(),
+//     ),
 //   );
 // }
 
-// class HomeApp extends StatelessWidget {
-//   const HomeApp({super.key});
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home: alldbscreens(),
-//     );
-//   }
-// }
+void main() {
+  runApp(
+    HomeApp(),
+  );
+}
+
+class HomeApp extends StatelessWidget {
+  const HomeApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: alldbscreens(),
+    );
+  }
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -74,9 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
       "user_email": useremail.text,
       "user_password": password.text,
     });
-    var data = json.decode(response.body);
+    var data = json.decode(response.body.toString());
     if (data == "Success") {
       await SessionManager().set('token', useremail.text);
+
       Fluttertoast.showToast(
           msg: "Login successful",
           toastLength: Toast.LENGTH_SHORT,
