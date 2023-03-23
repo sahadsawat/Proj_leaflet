@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' as io;
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:form_field_validator/form_field_validator.dart';
@@ -12,6 +13,8 @@ import 'package:leaflet_application/controller/cate_service.dart';
 import 'package:leaflet_application/controller/locat_service.dart';
 import 'package:leaflet_application/controller/reportobj_service.dart';
 import 'package:leaflet_application/models/location.dart';
+import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class reportobj_screen extends StatefulWidget {
   @override
@@ -24,15 +27,14 @@ class _reportobj_screenState extends State<reportobj_screen> {
   TextEditingController repobjcate = TextEditingController();
   TextEditingController repobjdetail = TextEditingController();
   TextEditingController repobjphoto = TextEditingController();
-
-  String? repobjtime;
-
+  late String? repobjdate;
   String? _selectedcateName;
   late List<category> _catenameSelected;
-
   String? _selectedlocatName;
   late List<location> _locatnameSelected;
-  File? file;
+
+  io.File? fileimage;
+  String? imagedata;
 
   @override
   void initState() {
@@ -47,11 +49,10 @@ class _reportobj_screenState extends State<reportobj_screen> {
   //   var url = "http://10.0.2.2/LeafletDB/reportobj_action.php";
   //   var response = await http.post(Uri.parse(url), body: {
   //     "reportobj_name": repobjname.text,
-  //     "cat_id": _selectedcateName,
-  //     // "reportobj_date": repobjtime,
+  //     "cate_id": _selectedcateName,
+  //     "reportobj_date": repobjdate,
   //     "reportobj_detail": repobjdetail.text,
   //     "locat_id": _selectedlocatName,
-  //     // "reportobj_photo": repobjphoto.text,
   //   });
   //   if (response.body.isNotEmpty) {
   //     json.decode(response.body);
@@ -84,15 +85,27 @@ class _reportobj_screenState extends State<reportobj_screen> {
   //   }
   // }
 
-  _addreportobj() {
+  _addreportobj() async {
+    String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage.php';
+    Random random = Random();
+    int i = random.nextInt(1000000);
+    String nameFile = 'repobj$i.jpg';
+    Map<String, dynamic> map = Map();
+    map['file'] =
+        await MultipartFile.fromFile(fileimage!.path, filename: nameFile);
+    FormData formData = FormData.fromMap(map);
+    await Dio().post(urlUpload, data: formData);
+    String urlPathImage = '$nameFile';
+    print('urlPathImage = http://10.0.2.2/LeafletDB/reportimage/$urlPathImage');
+
     if (repobjname.text.isEmpty) {
       print('Empty Fields');
 
       return;
     }
     repobj_service
-        .addreportobj(repobjname.text, repobjdetail.text, repobjtime!,
-            _selectedcateName!, _selectedlocatName!)
+        .addreportobj(repobjname.text, urlPathImage, repobjdetail.text,
+            repobjdate!, _selectedcateName!, _selectedlocatName!)
         .then((result) {
       if ('success' == result) {
         Fluttertoast.showToast(
@@ -168,6 +181,8 @@ class _reportobj_screenState extends State<reportobj_screen> {
   //   );
   // }
 
+//v1
+
   Future<Null> chooseImage(ImageSource source) async {
     try {
       var object = await ImagePicker().getImage(
@@ -176,7 +191,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
         maxHeight: 800.0,
       );
       setState(() {
-        file = File(object!.path);
+        fileimage = io.File(object!.path);
       });
     } catch (e) {}
   }
@@ -309,7 +324,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
                         timeLabelText: "เวลา",
                         onChanged: (String? time) {
                           setState(() {
-                            repobjtime = time!;
+                            repobjdate = time!;
                             print(time);
                           });
                         },
@@ -340,9 +355,9 @@ class _reportobj_screenState extends State<reportobj_screen> {
                     child: Container(
                       width: 200.0,
                       height: 200.0,
-                      child: file == null
+                      child: fileimage == null
                           ? Image.asset('images/leaf.png')
-                          : Image.file(file!),
+                          : Image.file(fileimage!),
                     ),
                   ),
                   Padding(
@@ -356,7 +371,6 @@ class _reportobj_screenState extends State<reportobj_screen> {
                               color: Colors.white)),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          // reportobj();
                           _addreportobj();
                         }
                       },

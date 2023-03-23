@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart'
     as http; // add the http plugin in pubspec.yaml file.
 import 'package:leaflet_application/models/reportobj.dart';
@@ -34,26 +35,26 @@ class repobj_service {
   }
 
   // Method to add category to the database...
-  static Future<String> addreportobj(
+  static Future addreportobj(
     String Repobj_name,
-    // String Repobj_photo,
+    String urlPathImage,
     // String repobj_status,
-    String repobj_detail,
-    String repobj_date,
-    String cate_id,
-    String locat_id,
+    String Repobj_detail,
+    String Repobj_date,
+    String Cate_id,
+    String Locat_id,
     // String user_id
   ) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_REPOBJ_ACTION;
       map['reportobj_name'] = Repobj_name;
-      // map['reportobj_photo'] = Repobj_photo;
+      map['reportobj_photo'] = urlPathImage;
       // map['reportobj_status'] = repobj_status;
-      map['reportobj_detail'] = repobj_detail;
-      map['reportobj_date'] = repobj_date;
-      map['cate_id'] = cate_id;
-      map['locat_id'] = locat_id;
+      map['reportobj_detail'] = Repobj_detail;
+      map['reportobj_date'] = Repobj_date;
+      map['cate_id'] = Cate_id;
+      map['locat_id'] = Locat_id;
       // map['user_id'] = user_id;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('addRepobj Response: ${response.body}');
@@ -70,27 +71,27 @@ class repobj_service {
 
   // Method to update an category in Database...
   static Future<String> updatereportobj(
-      String repobj_id,
+      String Repobj_id,
       String Repobj_name,
       String Repobj_photo,
-      String repobj_status,
-      String repobj_detail,
-      String repobj_date,
-      String cate_id,
-      String locat_id,
-      String user_id) async {
+      String Repobj_status,
+      String Repobj_detail,
+      String Repobj_date,
+      String Cate_id,
+      String Locat_id,
+      String User_id) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _UPDATE_REPOBJ_ACTION;
-      map['reportobj_id'] = repobj_id;
+      map['reportobj_id'] = Repobj_id;
       map['reportobj_name'] = Repobj_name;
       map['reportobj_photo'] = Repobj_photo;
-      map['reportobj_status'] = repobj_status;
-      map['reportobj_detail'] = repobj_detail;
-      map['reportobj_date'] = repobj_date;
-      map['cat_id'] = cate_id;
-      map['locat_id'] = locat_id;
-      map['user_id'] = user_id;
+      map['reportobj_status'] = Repobj_status;
+      map['reportobj_detail'] = Repobj_detail;
+      map['reportobj_date'] = Repobj_date;
+      map['cat_id'] = Cate_id;
+      map['locat_id'] = Locat_id;
+      map['user_id'] = User_id;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('updatereportobj Response: ${response.body}');
       if (200 == response.statusCode) {
