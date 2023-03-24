@@ -35,7 +35,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
   late List<major2> _facnameSelected;
   late List<major3> _majornameSelected3;
   late List item;
-  late List<user> _user;
+  late List<User> _user;
   @override
   void initState() {
     super.initState();
@@ -102,7 +102,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
     });
   }
 
-  _showValues(user user) {
+  _showValues(User user) {
     useremail.text = user.User_email;
   }
 
@@ -353,7 +353,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyHomePage(),
+                              builder: (context) => LoginPage(),
                             ),
                           );
                         },

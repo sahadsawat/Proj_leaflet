@@ -36,6 +36,9 @@ class _reportobj_screenState extends State<reportobj_screen> {
   io.File? fileimage;
   String? imagedata;
 
+  // late SharedPreferences logindata;
+  // String? userid;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +47,13 @@ class _reportobj_screenState extends State<reportobj_screen> {
     _getcate();
     _getlocat();
   }
+
+  // void innitial() async {
+  //   logindata = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     userid = logindata.getString('user_id');
+  //   });
+  // }
 
   // Future reportobj() async {
   //   var url = "http://10.0.2.2/LeafletDB/reportobj_action.php";
@@ -97,7 +107,8 @@ class _reportobj_screenState extends State<reportobj_screen> {
     await Dio().post(urlUpload, data: formData);
     String urlPathImage = '$nameFile';
     print('urlPathImage = http://10.0.2.2/LeafletDB/reportimage/$urlPathImage');
-
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? userid = preferences.getString('user_id');
     if (repobjname.text.isEmpty) {
       print('Empty Fields');
 
@@ -105,7 +116,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
     }
     repobj_service
         .addreportobj(repobjname.text, urlPathImage, repobjdetail.text,
-            repobjdate!, _selectedcateName!, _selectedlocatName!)
+            repobjdate!, _selectedcateName!, _selectedlocatName!, userid!)
         .then((result) {
       if ('success' == result) {
         Fluttertoast.showToast(

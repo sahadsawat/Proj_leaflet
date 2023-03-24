@@ -36,15 +36,14 @@ class repobj_service {
 
   // Method to add category to the database...
   static Future addreportobj(
-    String Repobj_name,
-    String urlPathImage,
-    // String repobj_status,
-    String Repobj_detail,
-    String Repobj_date,
-    String Cate_id,
-    String Locat_id,
-    // String user_id
-  ) async {
+      String Repobj_name,
+      String urlPathImage,
+      // String repobj_status,
+      String Repobj_detail,
+      String Repobj_date,
+      String Cate_id,
+      String Locat_id,
+      String user_id) async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _ADD_REPOBJ_ACTION;
@@ -55,7 +54,7 @@ class repobj_service {
       map['reportobj_date'] = Repobj_date;
       map['cate_id'] = Cate_id;
       map['locat_id'] = Locat_id;
-      // map['user_id'] = user_id;
+      map['user_id'] = user_id;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('addRepobj Response: ${response.body}');
       if (200 == response.statusCode) {

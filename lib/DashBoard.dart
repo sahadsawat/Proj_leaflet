@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:leaflet_application/main.dart';
+import 'package:leaflet_application/status.dart';
 import 'package:leaflet_application/screens/alldb_screens.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,6 +18,23 @@ const kTextStyle = TextStyle(
 
 class _HomeScreenState extends State<HomeScreen> {
   int itemIndex = 0;
+  late SharedPreferences logindata;
+  String? useremail;
+  String? userfirstname;
+  String? userid;
+
+  void initState() {
+    super.initState();
+    innitial();
+  }
+
+  void innitial() async {
+    logindata = await SharedPreferences.getInstance();
+    setState(() {
+      userid = logindata.getString('user_id');
+    });
+  }
+
   List<Widget> widgetList = [
     DashBoard(),
     Center(
@@ -28,10 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('Home Screen'),
-      //   backgroundColor: Colors.black,
-      // ),
+      appBar: AppBar(
+        title: Text('ยินดีต้อนรับuserIDที่ $userid'),
+        backgroundColor: Colors.black,
+      ),
       body: Center(
         child: widgetList.elementAt(itemIndex),
       ),
@@ -90,41 +108,73 @@ class DashBoard extends StatelessWidget {
               Icons.logout,
               color: Colors.white,
             ),
-            onPressed: () {
-              SessionManager().destroy();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MyHomePage(),
-                ),
-              );
+            onPressed: () async {
+              SharedPreferences prefernces =
+                  await SharedPreferences.getInstance();
+              prefernces.clear();
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPage()),
+                  (route) => false);
             },
           )
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          Center(
-            child: Text('ยินดีต้อนรับ'),
+      body: SingleChildScrollView(
+        child: Container(
+          child: Card(
+            color: Colors.greenAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            elevation: 8,
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(
+                    Icons.analytics,
+                    size: 50.0,
+                    color: Colors.black,
+                  ),
+                  textColor: Colors.black,
+                  title: Text('สถานะ'),
+                  subtitle: Text('ดูสถานะการเข้าใช้งาน'),
+                ),
+                Row(
+                  children: <Widget>[
+                    TextButton(
+                        style: TextButton.styleFrom(primary: Colors.black),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => status()));
+                        },
+                        child: Text("Enter")),
+                  ],
+                ),
+              ],
+            ),
+            // Center(
+            //   child: FutureBuilder(
+            //       future: SessionManager().get("token"),
+            //       builder: (context, snapshot) {
+            //         print(snapshot);
+            //         return Text(snapshot.hasData ? snapshot.data : 'Loading....');
+            //       }),
+            // ),
+
+            // MaterialButton(
+            //   color: Colors.red,
+            //   child: Text('Logout',
+            //       style: TextStyle(
+            //           fontSize: 20,
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.white)),
+            //   onPressed: () {},
+            // ),
           ),
-          Center(
-            child: FutureBuilder(
-                future: SessionManager().get("token"),
-                builder: (context, snapshot) {
-                  print(snapshot);
-                  return Text(snapshot.hasData ? snapshot.data : 'Loading....');
-                }),
-          ),
-          // MaterialButton(
-          //   color: Colors.red,
-          //   child: Text('Logout',
-          //       style: TextStyle(
-          //           fontSize: 20,
-          //           fontWeight: FontWeight.bold,
-          //           color: Colors.white)),
-          //   onPressed: () {},
-          // ),
-        ],
+        ),
       ),
     );
   }

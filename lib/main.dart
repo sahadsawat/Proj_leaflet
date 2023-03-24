@@ -6,8 +6,9 @@ import 'package:leaflet_application/screens/register_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'DashBoard.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:leaflet_application/models/user.dart';
+import 'package:dio/dio.dart';
 // void main() {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   dynamic token = SessionManager().get("token");
@@ -30,13 +31,14 @@ class HomeApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: alldbscreens(),
+      home: MyApp(),
     );
   }
 }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  @override
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,63 +48,119 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(),
+      home: LoginPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController useremail = TextEditingController();
-  TextEditingController password = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
+  String? useremail;
+  String? password;
+  //share preferences
+  late SharedPreferences logindata;
+  late bool newuser;
 
   @override
   void initState() {
     super.initState();
+
+    check_if_already_login();
+  }
+
+  // @override
+  // void dispose() {
+  //   useremail.dispose();
+  //   password.dispose();
+  //   super.dispose();
+  // }
+
+  Future<Null> checkAuthen() async {
+    String url =
+        'http://10.0.2.2/LeafletDB/getUserWhereUser.php?isAdd=true&user_email=$useremail';
+    print('url ===>> $url');
+    try {
+      Response response = await Dio().get(url);
+      print('res = $response');
+
+      var result = json.decode(response.data);
+      print('result = $result');
+      for (var map in result) {
+        User user = User.fromJson(map);
+        if (password == user.User_password) {
+          routeService(HomeScreen(), user);
+        }
+      }
+    } catch (e) {
+      print('Have e Error ===>> ${e.toString()}');
+    }
+  }
+
+  Future<void> routeService(Widget myWidget, User user) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool('login', false);
+    preferences.setString("user_id", user.User_id);
+    preferences.setString("user_email", user.User_email);
+    preferences.setString("first_name", user.First_name);
+
+    MaterialPageRoute route = MaterialPageRoute(
+      builder: (context) => myWidget,
+    );
+    Navigator.pushAndRemoveUntil(context, route, (route) => false);
+  }
+
+  Future<void> check_if_already_login() async {
+    logindata = await SharedPreferences.getInstance();
+    newuser = (logindata.getBool('login') ?? true);
+    print(newuser);
+    if (newuser == false) {
+      Navigator.pushReplacement(
+          context, new MaterialPageRoute(builder: (context) => HomeScreen()));
+    }
   }
 
   bool _isHidden = true;
   bool _authenticatingStatus = false;
 
-  Future login() async {
-    var url = "http://10.0.2.2/LeafletDB/login_action.php";
-    var response = await http.post(Uri.parse(url), body: {
-      "user_email": useremail.text,
-      "user_password": password.text,
-    });
-    var data = json.decode(response.body.toString());
-    if (data == "Success") {
-      await SessionManager().set('token', useremail.text);
-
-      Fluttertoast.showToast(
-          msg: "Login successful",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(),
-        ),
-      );
-    } else {
-      Fluttertoast.showToast(
-          msg: "E-mail and password is valid",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
-  }
+  // Future login() async {
+  //   var url = "http://10.0.2.2/LeafletDB/login_action.php";
+  //   var response = await http.post(Uri.parse(url), body: {
+  //     "user_email": useremail.text,
+  //     "user_password": password.text,
+  //   });
+  //   var data = json.decode(response.body);
+  //   if (data == "Success") {
+  //     logindata.setBool('login', false);
+  //     logindata.setString('useremail', useremail.text);
+  //     Fluttertoast.showToast(
+  //         msg: "Login successful",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.CENTER,
+  //         timeInSecForIosWeb: 1,
+  //         backgroundColor: Colors.green,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0);
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => HomeScreen(),
+  //       ),
+  //     );
+  //   } else {
+  //     Fluttertoast.showToast(
+  //         msg: "E-mail and password is valid",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.CENTER,
+  //         timeInSecForIosWeb: 1,
+  //         backgroundColor: Colors.red,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)),
                 ),
-                controller: useremail,
+                onChanged: (value) => useremail = value.trim(),
               ),
             ),
             Padding(
@@ -158,7 +216,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         : Icons.visibility),
                   ),
                 ),
-                controller: password, // ผูกกับ TextFormField ที่จะใช้
+                onChanged: (value) =>
+                    password = value.trim(), // ผูกกับ TextFormField ที่จะใช้
                 obscureText:
                     _isHidden, // ก่อนซ่อนหรือแสดงข้อความในรูปแบบรหัสผ่าน
               ),
@@ -174,7 +233,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
                     onPressed: () {
-                      login();
+                      // login();
+                      checkAuthen();
                     },
                   ),
                 ),

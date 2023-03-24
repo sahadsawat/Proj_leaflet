@@ -78,7 +78,7 @@ class _Register_screenState extends State<Register_screen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DashBoard(),
+          builder: (context) => LoginPage(),
         ),
       );
     }
@@ -331,7 +331,7 @@ class _Register_screenState extends State<Register_screen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MyHomePage(),
+                              builder: (context) => LoginPage(),
                             ),
                           );
                         },

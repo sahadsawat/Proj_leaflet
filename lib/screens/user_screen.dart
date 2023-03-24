@@ -30,15 +30,15 @@ class Debouncer {
 }
 
 class user_screenState extends State<user_screen> {
-  late List<user> _user;
-  late List<user> _filteruser;
+  late List<User> _user;
+  late List<User> _filteruser;
   late GlobalKey<ScaffoldState> _scaffoldKey;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // controller for the First Name TextField we are going to create.
   late TextEditingController _useremailController;
   late TextEditingController _usertelController;
   // controller for the Last Name TextField we are going to create.
-  late user _selecteduser;
+  late User _selecteduser;
   late bool _isUpdating;
   late String _titleProgress;
   final _debouncer = Debouncer(milliseconds: 500);
@@ -100,7 +100,7 @@ class user_screenState extends State<user_screen> {
     });
   }
 
-  _updateuser(user user) {
+  _updateuser(User user) {
     setState(() {
       _isUpdating = true;
     });
@@ -119,7 +119,7 @@ class user_screenState extends State<user_screen> {
     });
   }
 
-  _deleteuser(user user) {
+  _deleteuser(User user) {
     _showProgress('Deleting user...');
     user_service.deleteuser(user.User_id).then((result) {
       if ('success' == result) {
@@ -134,7 +134,7 @@ class user_screenState extends State<user_screen> {
     _usertelController.text = '';
   }
 
-  _showValues(user user) {
+  _showValues(User user) {
     _useremailController.text = user.User_email;
     _usertelController.text = user.User_tel;
   }

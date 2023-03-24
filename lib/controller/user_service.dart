@@ -11,26 +11,26 @@ class user_service {
   static const _UPDATE_USER_ACTION = 'UPDATE_USER';
   static const _DELETE_USER_ACTION = 'DELETE_USER';
 
-  static Future<List<user>> getuser() async {
+  static Future<List<User>> getuser() async {
     try {
       var map = Map<String, dynamic>();
       map['action'] = _GET_ALL_ACTION;
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('getuser Response: ${response.body}');
       if (200 == response.statusCode) {
-        List<user> list = parseResponse(response.body);
+        List<User> list = parseResponse(response.body);
         return list;
       } else {
-        return <user>[];
+        return <User>[];
       }
     } catch (e) {
-      return <user>[]; // return an empty list on exception/error
+      return <User>[]; // return an empty list on exception/error
     }
   }
 
-  static List<user> parseResponse(String responseBody) {
+  static List<User> parseResponse(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-    return parsed.map<user>((json) => user.fromJson(json)).toList();
+    return parsed.map<User>((json) => User.fromJson(json)).toList();
   }
 
   // Method to add category to the database...
