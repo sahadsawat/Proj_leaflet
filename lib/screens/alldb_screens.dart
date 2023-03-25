@@ -6,7 +6,7 @@ import 'package:leaflet_application/screens/major_screen.dart';
 import 'package:leaflet_application/screens/reportobj_screens.dart';
 import 'package:leaflet_application/screens/user_screen.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:leaflet_application/screens/reportobj_db_screen.dart';
 
 class alldbscreens extends StatelessWidget {
   @override
@@ -15,21 +15,13 @@ class alldbscreens extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text("Manage Data จัดการข้อมูลในระบบ"),
+        backgroundColor: Colors.greenAccent,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 50, 10, 0),
           child: Column(
             children: [
-              // Center(
-              //   child: FutureBuilder(
-              //       future: SessionManager().get("token"),
-              //       builder: (context, snapshot) {
-              //         print(snapshot);
-              //         return Text(
-              //             snapshot.hasData ? snapshot.data : 'Loading....');
-              //       }),
-              // ),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -116,27 +108,12 @@ class alldbscreens extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.add),
-                  label: Text("ตั้งค่าผู้ใช้", style: TextStyle(fontSize: 20)),
+                  label: Text("ReportOBJ(แจ้งหาสิ่งของ)",
+                      style: TextStyle(fontSize: 20)),
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
-                      return userprofile_screen();
-                    }));
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: Icon(Icons.add),
-                  label: Text("แจ้งหาสิ่งของ", style: TextStyle(fontSize: 20)),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return reportobj_screen();
+                      return reportobj_db_screen();
                     }));
                   },
                 ),

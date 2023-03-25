@@ -217,10 +217,8 @@ class major_screenState extends State<major_screen> {
                       ),
                       onTap: () {
                         _showValues(major);
-                        // Set the Selected employee to Update
                         _selectedmajor = major;
                         _selectedFacName = major.Fac_id;
-                        // Set flag updating to true to indicate in Update Mode
                         setState(() {
                           _isUpdating = true;
                         });

@@ -92,7 +92,24 @@ class _LoginPageState extends State<LoginPage> {
       for (var map in result) {
         User user = User.fromJson(map);
         if (password == user.User_password) {
+          Fluttertoast.showToast(
+              msg: "Login successful",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
           routeService(HomeScreen(), user);
+        } else {
+          Fluttertoast.showToast(
+              msg: "E-mail and password is valid",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
       }
     } catch (e) {

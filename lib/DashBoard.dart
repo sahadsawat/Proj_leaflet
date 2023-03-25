@@ -3,6 +3,8 @@ import 'package:leaflet_application/main.dart';
 import 'package:leaflet_application/status.dart';
 import 'package:leaflet_application/screens/alldb_screens.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
+import 'package:leaflet_application/screens/reportobj_screens.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -37,19 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> widgetList = [
     DashBoard(),
-    Center(
-      child: Text('กราฟ', style: kTextStyle),
-    ),
+    reportobj_screen(),
     userprofile_screen(),
     alldbscreens(),
   ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('ยินดีต้อนรับuserIDที่ $userid'),
-        backgroundColor: Colors.black,
-      ),
+      // appBar: AppBar(
+      //   title: Text('ยินดีต้อนรับuserIDที่ $userid'),
+      //   backgroundColor: Colors.black,
+      // ),
       body: Center(
         child: widgetList.elementAt(itemIndex),
       ),
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.grey,
           ),
           BottomNavigationBarItem(
-            label: "กราฟ",
+            label: "Report",
             icon: Icon(Icons.graphic_eq),
             backgroundColor: Colors.purple,
           ),
@@ -101,6 +101,7 @@ class DashBoard extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.greenAccent,
         title: Text('Wellcome'),
         actions: <Widget>[
           IconButton(
