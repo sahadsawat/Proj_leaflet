@@ -8,15 +8,16 @@ class User {
   String User_lineid;
   String Major_id;
 
-  User(
-      {required this.User_id,
-      required this.User_email,
-      required this.User_password,
-      required this.First_name,
-      required this.Last_name,
-      required this.User_tel,
-      required this.User_lineid,
-      required this.Major_id});
+  User({
+    required this.User_id,
+    required this.User_email,
+    required this.User_password,
+    required this.First_name,
+    required this.Last_name,
+    required this.User_tel,
+    required this.User_lineid,
+    required this.Major_id,
+  });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(

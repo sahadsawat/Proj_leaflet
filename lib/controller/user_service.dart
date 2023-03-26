@@ -33,26 +33,6 @@ class user_service {
     return parsed.map<User>((json) => User.fromJson(json)).toList();
   }
 
-  // Method to add category to the database...
-  // static Future<String> adduser(String user_no, String user_id) async {
-  //   try {
-  //     var map = Map<String, dynamic>();
-  //     map['action'] = _ADD_USER_ACTION;
-  //     map['user_no'] = user_no;
-  //     map['user_id'] = user_id;
-  //     final response = await http.post(Uri.parse(ROOT), body: map);
-  //     print('addUser Response: ${response.body}');
-  //     if (200 == response.statusCode) {
-  //       return response.body;
-  //     } else {
-  //       return "error1";
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     return "error2";
-  //   }
-  // }
-
   // Method to update an category in Database...
   static Future<String> updateuser(
     String user_id,
@@ -80,6 +60,40 @@ class user_service {
 
       final response = await http.post(Uri.parse(ROOT), body: map);
       print('updateUser Response: ${response.body}');
+      if (200 == response.statusCode) {
+        return response.body;
+      } else {
+        return "error1";
+      }
+    } catch (e) {
+      print(e);
+      return "error2";
+    }
+  }
+
+  static Future<String> updateuser2(
+      String user_id,
+      String user_email,
+      String user_tel,
+      String user_password,
+      String first_name,
+      String last_name,
+      String user_lineid,
+      String major_id) async {
+    try {
+      var map = Map<String, dynamic>();
+      map['action'] = _UPDATE_USER_ACTION;
+      map['user_id'] = user_id;
+      map['user_email'] = user_email;
+      map['user_password'] = user_password;
+      map['first_name'] = first_name;
+      map['last_name'] = last_name;
+      map['user_tel'] = user_tel;
+      map['user_lineid'] = user_lineid;
+      map['major_id'] = major_id;
+
+      final response = await http.post(Uri.parse(ROOT), body: map);
+      print('2updateUser Response: ${response.body}');
       if (200 == response.statusCode) {
         return response.body;
       } else {

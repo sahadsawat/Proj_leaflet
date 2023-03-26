@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:leaflet_application/models/faculty.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,129 +23,291 @@ class userprofile_screen extends StatefulWidget {
 }
 
 class _userprofile_screenState extends State<userprofile_screen> {
-  TextEditingController useremail = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController firstname = TextEditingController();
-  TextEditingController lastname = TextEditingController();
-  TextEditingController usertel = TextEditingController();
-  TextEditingController userlineid = TextEditingController();
-  TextEditingController userfac = TextEditingController();
-  TextEditingController usermajor = TextEditingController();
+  TextEditingController textuseremail = TextEditingController();
+  TextEditingController textpassword = TextEditingController();
+  TextEditingController textfirstname = TextEditingController();
+  TextEditingController textlastname = TextEditingController();
+  TextEditingController textusertel = TextEditingController();
+  TextEditingController textuserlineid = TextEditingController();
+  TextEditingController textuserfac = TextEditingController();
+  TextEditingController textusermajor = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   //drop down
-  String? _selectedfacName;
+  User? userModel;
+  String? useremail,
+      password,
+      firstname,
+      lastname,
+      usertel,
+      userlineid,
+      userfac,
+      usermajor;
+
+  User? selecteduser;
+
   String? _selectedmajorName;
-  late List<major2> _facnameSelected;
-  late List<major3> _majornameSelected3;
+  late List<major> _majornameSelected;
+  String? _selectedfacName;
+  late List<faculty> _facnameSelected;
   late List item;
   late List<User> _user;
+  late SharedPreferences logindata;
+  // String? userfirstname;
+  // String? userid;
+  // String? user_email;
   @override
   void initState() {
     super.initState();
+
     _facnameSelected = [];
-    _majornameSelected3 = [];
-    _getmajor2();
+    _majornameSelected = [];
     //user
-    useremail = TextEditingController();
-    _user = [];
-    _getuser();
+    readCurrentInfo();
+    _getmajor();
+    _getfaculty();
+    // innitial();
   }
 
-  Future register() async {
-    var url = "http://10.0.2.2/LeafletDB/userprofile_action.php";
-    var response = await http.post(Uri.parse(url), body: {
-      "user_email": useremail.text,
-      "user_password": password.text,
-      "first_name": firstname.text,
-      "last_name": lastname.text,
-      "user_tel": usertel.text,
-      "user_lineid": userlineid.text,
-      "major_id": _selectedmajorName,
-    });
-    if (response.body.isNotEmpty) {
-      json.decode(response.body);
+  // void innitial() async {
+  //   logindata = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     userid = logindata.getString('user_id');
+  //     userfirstname = logindata.getString('first_name');
+  //     user_email = logindata.getString('user_email');
+  //   });
+  // }
+
+  Future<Null> readCurrentInfo() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? userid = preferences.getString('user_id');
+    print('user_id ==>> $userid');
+
+    String url =
+        'http://10.0.2.2/LeafletDB/getUserWhereId.php?isAdd=true&user_id=$userid';
+
+    Response response = await Dio().get(url);
+    print('response ==>> $response');
+
+    var result = json.decode(response.data);
+    print('result ==>> $result');
+
+    for (var map in result) {
+      print('map ==>> $map');
+      setState(() {
+        userModel = User.fromJson(map);
+        textuseremail.text = userModel!.User_email;
+        textpassword.text = userModel!.User_password;
+        textfirstname.text = userModel!.First_name;
+        textlastname.text = userModel!.Last_name;
+        textusertel.text = userModel!.User_tel;
+        textuserlineid.text = userModel!.User_lineid;
+        _selectedmajorName = userModel!.Major_id;
+        useremail = userModel!.User_email;
+        password = userModel!.User_password;
+        firstname = userModel!.First_name;
+        lastname = userModel!.Last_name;
+        usertel = userModel!.User_tel;
+        userlineid = userModel!.User_lineid;
+        // _selectedfacName = userModel!.Fac_id;
+      });
     }
-    var data = json.decode(response.body);
-    if (data == "Error") {
-      Fluttertoast.showToast(
-          msg: "User allready Please use another E-mail",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    } else {
-      Fluttertoast.showToast(
-          msg: "Registration Successful",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0);
+  }
+
+  Future<Null> confirmDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text('คุณแน่ใจว่าจะ ปรับปรุงรายละเอียด?'),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  // _updateuser(userModel!);
+                  editThread();
+                },
+                child: Text('แน่ใจ'),
+              ),
+              OutlinedButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('ไม่แน่ใจ'),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Future _updateuser(User user) async {
+    user_service
+        .updateuser2(
+            user.User_id,
+            textuseremail.text,
+            textpassword.text,
+            textfirstname.text,
+            textlastname.text,
+            textusertel.text,
+            textuserlineid.text,
+            _selectedmajorName!)
+        .then((result) {
+      if ('success' == result) {
+        readCurrentInfo(); // Refresh the list after update
+        setState(() {});
+      }
+    });
+  }
+
+  Future<Null> editThread() async {
+    String userid = userModel!.User_id;
+    String url =
+        'http://10.0.2.2/LeafletDB/editUserWhereId.php?isAdd=true&user_id=$userid&user_email=$useremail&user_password=$password&first_name=$firstname&last_name=$lastname&user_tel=$usertel&user_lineid=$userlineid&major_id=$_selectedmajorName';
+
+    Response response = await Dio().get(url);
+    if (response.toString() == 'true') {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DashBoard(),
+          builder: (context) => HomeApp(),
         ),
       );
-    }
+    } else {}
   }
 
-  _getuser() {
-    user_service.getuser().then((user) {
+  _getmajor() {
+    major_service.getmajor().then((major) {
       setState(() {
-        _user = user;
+        _majornameSelected = major;
       });
-      // _clearValues();
-      // _showProgress(widget.title); // Reset the title...
-      print("Length ${user.length}");
-      _showValues;
+      print("Length ${major.length}");
     });
   }
 
-  _showValues(User user) {
-    useremail.text = user.User_email;
-  }
-
-  _getmajor(fac_id) {
-    // _showProgress('Loading major...');
-    _selectedmajorName = null;
-    if (fac_id != '' || fac_id != null) {
-      //! query data where ด้วย fac_id
-
-      major_service.getmajor3(fac_id).then((major3) {
-        // major.forEach((var data) => {
-        //       if (data.Fac_id == fac_id) {print(data)}
-        //     });
-        setState(() {
-          _majornameSelected3 = major3;
-        });
-
-        // _clearValues();
-        // _showProgress(widget.title); // Reset the title...
-        // print("Length ${major.length}");
-      });
-    } else {
+  _getfaculty() {
+    fac_service.getfaculty().then((fac) {
       setState(() {
-        _majornameSelected3 = [];
+        _facnameSelected = fac;
       });
-    }
-  }
-
-  _getmajor2() {
-    // _showProgress('Loading major...');
-    major_service.getmajor2().then((major2) {
-      setState(() {
-        _facnameSelected = major2;
-      });
-      // _clearValues();
-      // _showProgress(widget.title); // Reset the title...
-      // print("Length ${major2.length}");
+      print("Length ${fac.length}");
     });
   }
 
+  // Widget showContent() => SingleChildScrollView(
+  //       child: Column(
+  //         children: <Widget>[
+  //           user_email(),
+  //           user_password(),
+  //           user_firstname(),
+  //           user_lastname(),
+  //           user_lineid(),
+  //           user_tel()
+  //         ],
+  //       ),
+  //     );
+  // Widget user_email() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         Container(
+  //           margin: EdgeInsets.only(top: 16.0),
+  //           width: 250.0,
+  //           child: TextFormField(
+  //             onChanged: (value) => useremail = value,
+  //             initialValue: useremail,
+  //             decoration: InputDecoration(
+  //               border: OutlineInputBorder(),
+  //               labelText: 'Email',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  // Widget user_password() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         Container(
+  //           margin: EdgeInsets.only(top: 16.0),
+  //           width: 250.0,
+  //           child: TextFormField(
+  //             onChanged: (value) => password = value,
+  //             initialValue: password,
+  //             decoration: InputDecoration(
+  //               border: OutlineInputBorder(),
+  //               labelText: 'Email',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  // Widget user_firstname() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         Container(
+  //           margin: EdgeInsets.only(top: 16.0),
+  //           width: 250.0,
+  //           child: TextFormField(
+  //             onChanged: (value) => firstname = value,
+  //             initialValue: firstname,
+  //             decoration: InputDecoration(
+  //               border: OutlineInputBorder(),
+  //               labelText: 'ชื่อของร้าน',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  // Widget user_lastname() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         Container(
+  //           margin: EdgeInsets.only(top: 16.0),
+  //           width: 250.0,
+  //           child: TextFormField(
+  //             onChanged: (value) => lastname = value,
+  //             initialValue: lastname,
+  //             decoration: InputDecoration(
+  //               border: OutlineInputBorder(),
+  //               labelText: 'ชื่อของร้าน',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  // Widget user_tel() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         Container(
+  //           margin: EdgeInsets.only(top: 16.0),
+  //           width: 250.0,
+  //           child: TextFormField(
+  //             onChanged: (value) => usertel = value,
+  //             initialValue: usertel,
+  //             decoration: InputDecoration(
+  //               border: OutlineInputBorder(),
+  //               labelText: 'ชื่อของร้าน',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
+  // Widget user_lineid() => Row(
+  //       mainAxisAlignment: MainAxisAlignment.center,
+  //       children: <Widget>[
+  //         Container(
+  //           margin: EdgeInsets.only(top: 16.0),
+  //           width: 250.0,
+  //           child: TextFormField(
+  //             onChanged: (value) => userlineid = value,
+  //             initialValue: userlineid,
+  //             decoration: InputDecoration(
+  //               border: OutlineInputBorder(),
+  //               labelText: 'ชื่อของร้าน',
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,13 +327,18 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Profile',
+                    'Profile $firstname',
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: textuseremail,
+                    onChanged: (value) {
+                      setState(() => useremail = value);
+                    },
+                    // initialValue: useremail,
                     decoration: InputDecoration(
                       labelText: 'E-mail',
                       prefixIcon: Icon(
@@ -178,7 +348,6 @@ class _userprofile_screenState extends State<userprofile_screen> {
                           borderRadius: BorderRadius.circular(8)),
                     ),
                     keyboardType: TextInputType.emailAddress,
-                    controller: useremail,
                     validator: MultiValidator([
                       RequiredValidator(errorText: "please record Email"),
                       EmailValidator(errorText: "รูปแบบอีเมลไม่ถูกต้อง")
@@ -188,6 +357,9 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: textpassword,
+                    onChanged: (value) => password = value.trim(),
+                    // initialValue: password,
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Password',
@@ -195,7 +367,6 @@ class _userprofile_screenState extends State<userprofile_screen> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    controller: password,
                     validator:
                         RequiredValidator(errorText: "please record Password"),
                   ),
@@ -203,6 +374,9 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: textfirstname,
+                    onChanged: (value) => firstname = value,
+                    // initialValue: firstname,
                     decoration: InputDecoration(
                       labelText: 'First Name',
                       prefixIcon: Icon(
@@ -211,7 +385,6 @@ class _userprofile_screenState extends State<userprofile_screen> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    controller: firstname,
                     validator: RequiredValidator(
                         errorText: "please record First Name"),
                   ),
@@ -219,6 +392,9 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: textlastname,
+                    onChanged: (value) => lastname = value,
+                    // initialValue: lastname,
                     decoration: InputDecoration(
                       labelText: 'Last Name',
                       prefixIcon: Icon(
@@ -227,7 +403,6 @@ class _userprofile_screenState extends State<userprofile_screen> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    controller: lastname,
                     validator:
                         RequiredValidator(errorText: "please record Last Name"),
                   ),
@@ -235,6 +410,9 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: textusertel,
+                    onChanged: (value) => usertel = value,
+                    // initialValue: usertel,
                     decoration: InputDecoration(
                       labelText: 'Tel',
                       prefixIcon: Icon(
@@ -244,7 +422,6 @@ class _userprofile_screenState extends State<userprofile_screen> {
                           borderRadius: BorderRadius.circular(8)),
                     ),
                     keyboardType: TextInputType.phone,
-                    controller: usertel,
                     validator: RequiredValidator(
                         errorText: "please record Telephone Number"),
                   ),
@@ -252,6 +429,9 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    controller: textuserlineid,
+                    onChanged: (value) => userlineid = value,
+                    // initialValue: userlineid,
                     decoration: InputDecoration(
                       labelText: 'Line ID',
                       prefixIcon: Icon(
@@ -260,43 +440,37 @@ class _userprofile_screenState extends State<userprofile_screen> {
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    controller: userlineid,
                     // validator: MultiValidator([
                     //   RequiredValidator(errorText: "please record Email"),
                     //   EmailValidator(errorText: "รูปแบบอีเมลไม่ถูกต้อง")
                     // ]),
                   ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DropdownButtonFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Faculty',
-                        // prefixIcon: Icon(
-                        //   Icons.,
-                        // ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      value: _selectedfacName,
-                      autovalidateMode: AutovalidateMode.always,
-                      validator: (value) =>
-                          (value == null) ? 'Please Select Faculty' : null,
-                      items: _facnameSelected.map((faculty) {
-                        return DropdownMenuItem(
-                          value: faculty.Fac_id.toString(),
-                          child: Text(faculty.Fac_name),
-                        );
-                      }).toList(),
-                      onChanged: (String? faculty) {
-                        setState(() {
-                          _selectedfacName = faculty!;
-                          // set ค่า major ให้เป้นค่าว่างก่อน
-                          _getmajor(
-                              _selectedfacName); // ส่งค่า fac id ไป function get major
-                        });
-                      },
-                    )),
+                // Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: DropdownButtonFormField(
+                //       decoration: InputDecoration(
+                //         labelText: 'Faculty',
+                //         // prefixIcon: Icon(
+                //         //   Icons.,
+                //         // ),
+                //         border: OutlineInputBorder(
+                //             borderRadius: BorderRadius.circular(8)),
+                //       ),
+                //       value: _selectedfacName,
+                //       autovalidateMode: AutovalidateMode.always,
+                //       validator: (value) =>
+                //           (value == null) ? 'Please Select Faculty' : null,
+                //       items: _facnameSelected.map((faculty) {
+                //         return DropdownMenuItem(
+                //           value: faculty.Fac_id.toString(),
+                //           child: Text(faculty.Fac_name),
+                //         );
+                //       }).toList(),
+                //       onChanged: (String? faculty) {
+                //         setState(() {});
+                //       },
+                //     )),
                 Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButtonFormField(
@@ -312,7 +486,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                       autovalidateMode: AutovalidateMode.always,
                       validator: (value) =>
                           (value == null) ? 'Please Select Major' : null,
-                      items: _majornameSelected3.map((major) {
+                      items: _majornameSelected.map((major) {
                         return DropdownMenuItem(
                           value: major.Major_id.toString(),
                           child: Text(major.Major_name),
@@ -328,37 +502,39 @@ class _userprofile_screenState extends State<userprofile_screen> {
                   children: <Widget>[
                     Expanded(
                       child: MaterialButton(
-                        color: Colors.pink,
-                        child: Text('Register',
+                        color: Colors.green,
+                        child: Text('Edit',
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white)),
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            register();
+                            confirmDialog();
                           }
                         },
                       ),
                     ),
-                    Expanded(
-                      child: MaterialButton(
-                        color: Colors.amber[100],
-                        child: Text('Login',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black)),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    // SizedBox(),
+                    // Expanded(
+                    //   child: MaterialButton(
+                    //     color: Colors.red,
+                    //     child: Text('Cancle',
+                    //         style: TextStyle(
+                    //             fontSize: 20,
+                    //             fontWeight: FontWeight.bold,
+                    //             color: Colors.black)),
+                    //     onPressed: () {
+                    //       // Navigator.push(
+                    //       //   context,
+                    //       //   MaterialPageRoute(
+                    //       //     builder: (context) =>
+                    //       //     clearvalue(),
+                    //       //   ),
+                    //       // );
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 )
               ],

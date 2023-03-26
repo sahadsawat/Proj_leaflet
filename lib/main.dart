@@ -9,6 +9,7 @@ import 'DashBoard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:leaflet_application/models/user.dart';
 import 'package:dio/dio.dart';
+
 // void main() {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   dynamic token = SessionManager().get("token");
@@ -38,7 +39,6 @@ class HomeApp extends StatelessWidget {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  @override
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -121,8 +121,8 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool('login', false);
     preferences.setString("user_id", user.User_id);
-    preferences.setString("user_email", user.User_email);
-    preferences.setString("first_name", user.First_name);
+    // preferences.setString("user_email", user.User_email);
+    // preferences.setString("first_name", user.First_name);
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,
