@@ -121,8 +121,8 @@ class _LoginPageState extends State<LoginPage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool('login', false);
     preferences.setString("user_id", user.User_id);
-    // preferences.setString("user_email", user.User_email);
-    // preferences.setString("first_name", user.First_name);
+    preferences.setString("user_email", user.User_email);
+    preferences.setString("first_name", user.First_name);
 
     MaterialPageRoute route = MaterialPageRoute(
       builder: (context) => myWidget,

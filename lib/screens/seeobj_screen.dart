@@ -11,23 +11,23 @@ import 'package:leaflet_application/DashBoard.dart';
 import 'package:leaflet_application/models/category.dart';
 import 'package:leaflet_application/controller/cate_service.dart';
 import 'package:leaflet_application/controller/locat_service.dart';
-import 'package:leaflet_application/controller/reportobj_service.dart';
+import 'package:leaflet_application/controller/seeobj_service.dart';
 import 'package:leaflet_application/models/location.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class reportobj_screen extends StatefulWidget {
+class seeobj_screen extends StatefulWidget {
   @override
-  _reportobj_screenState createState() => _reportobj_screenState();
+  _seeobj_screenState createState() => _seeobj_screenState();
 }
 
-class _reportobj_screenState extends State<reportobj_screen> {
+class _seeobj_screenState extends State<seeobj_screen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  TextEditingController repobjname = TextEditingController();
-  TextEditingController repobjcate = TextEditingController();
-  TextEditingController repobjdetail = TextEditingController();
-  TextEditingController repobjphoto = TextEditingController();
-  late String? repobjdate;
+  TextEditingController seeobjname = TextEditingController();
+  TextEditingController seeobjcate = TextEditingController();
+  TextEditingController seeobjdetail = TextEditingController();
+  TextEditingController seeobjphoto = TextEditingController();
+  late String? seeobjdate;
   String? _selectedcateName;
   late List<category> _catenameSelected;
   String? _selectedlocatName;
@@ -48,79 +48,32 @@ class _reportobj_screenState extends State<reportobj_screen> {
     _getlocat();
   }
 
-  // void innitial() async {
-  //   logindata = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     userid = logindata.getString('user_id');
-  //   });
-  // }
-
-  // Future reportobj() async {
-  //   var url = "http://10.0.2.2/LeafletDB/reportobj_action.php";
-  //   var response = await http.post(Uri.parse(url), body: {
-  //     "reportobj_name": repobjname.text,
-  //     "cate_id": _selectedcateName,
-  //     "reportobj_date": repobjdate,
-  //     "reportobj_detail": repobjdetail.text,
-  //     "locat_id": _selectedlocatName,
-  //   });
-  //   if (response.body.isNotEmpty) {
-  //     json.decode(response.body);
-  //   }
-  //   var data = json.decode(response.body);
-  //   if (data == "Success") {
-  //     Fluttertoast.showToast(
-  //         msg: "ADD reportOBJ Successful",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.CENTER,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: Colors.green,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0);
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => DashBoard(),
-  //       ),
-  //     );
-  //   } else {
-  //     Fluttertoast.showToast(
-  //         msg: "E-mail and password is valid",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.CENTER,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: Colors.red,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0);
-  //   }
-  // }
-
-  _addreportobj() async {
-    String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage.php';
+  _addseeobj() async {
+    String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage2.php';
     Random random = Random();
     int i = random.nextInt(1000000);
-    String nameFile = 'repobj$i.jpg';
+    String nameFile = 'seeobj$i.jpg';
     Map<String, dynamic> map = Map();
     map['file'] =
         await MultipartFile.fromFile(fileimage!.path, filename: nameFile);
     FormData formData = FormData.fromMap(map);
     await Dio().post(urlUpload, data: formData);
     String urlPathImage = '$nameFile';
-    print('urlPathImage = http://10.0.2.2/LeafletDB/reportimage/$urlPathImage');
+    print('urlPathImage = http://10.0.2.2/LeafletDB/seeimage/$urlPathImage');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
-    if (repobjname.text.isEmpty) {
+    if (seeobjname.text.isEmpty) {
       print('Empty Fields');
 
       return;
     }
     repobj_service
-        .addreportobj(repobjname.text, urlPathImage, repobjdetail.text,
-            repobjdate!, _selectedcateName!, _selectedlocatName!, userid!)
+        .addseeobj(seeobjname.text, urlPathImage, seeobjdetail.text,
+            seeobjdate!, _selectedcateName!, _selectedlocatName!, userid!)
         .then((result) {
       if ('success' == result) {
         Fluttertoast.showToast(
-            msg: "ReportOBJ Successful",
+            msg: "SEEOBJ Successful",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
@@ -212,7 +165,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'แจ้งตามหาสิ่งของ',
+          'เพิ่มสิ่งของที่พบเห็น',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.greenAccent,
@@ -226,7 +179,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Report lose Item',
+                      'Found lose Items',
                       style:
                           TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
@@ -235,16 +188,16 @@ class _reportobj_screenState extends State<reportobj_screen> {
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Report item name',
+                        labelText: 'Found item name',
                         // prefixIcon: Icon(
                         //   Icons.email,
                         // ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),
-                      controller: repobjname,
-                      validator:
-                          RequiredValidator(errorText: "please record objname"),
+                      controller: seeobjname,
+                      validator: RequiredValidator(
+                          errorText: "please record found item name"),
                     ),
                   ),
                   Padding(
@@ -288,7 +241,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8)),
                       ),
-                      controller: repobjdetail,
+                      controller: seeobjdetail,
                       validator:
                           RequiredValidator(errorText: "please record detail"),
                     ),
@@ -335,7 +288,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
                         timeLabelText: "เวลา",
                         onChanged: (String? time) {
                           setState(() {
-                            repobjdate = time!;
+                            seeobjdate = time!;
                             print(time);
                           });
                         },
@@ -382,7 +335,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
                               color: Colors.white)),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
-                          _addreportobj();
+                          _addseeobj();
                         }
                       },
                     ),

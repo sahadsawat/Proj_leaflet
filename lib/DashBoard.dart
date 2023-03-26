@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/main.dart';
+import 'package:leaflet_application/screens/seeobj_screen.dart';
 import 'package:leaflet_application/status.dart';
 import 'package:leaflet_application/screens/alldb_screens.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
@@ -25,31 +26,108 @@ class _HomeScreenState extends State<HomeScreen> {
   String? userfirstname;
   String? userid;
 
+  Widget? currentWidget;
+
   void initState() {
     super.initState();
     innitial();
+    currentWidget = userprofile_screen();
   }
 
   void innitial() async {
     logindata = await SharedPreferences.getInstance();
     setState(() {
       userid = logindata.getString('user_id');
+      useremail = logindata.getString('user_email');
+      userfirstname = logindata.getString('first_name');
     });
   }
 
   List<Widget> widgetList = [
     DashBoard(),
     reportobj_screen(),
-    userprofile_screen(),
+    seeobj_screen(),
     alldbscreens(),
   ];
+
+  UserAccountsDrawerHeader showHead() {
+    return UserAccountsDrawerHeader(
+      accountName: Text(
+        "$useremail",
+        style: TextStyle(color: Colors.white),
+      ),
+      accountEmail: Text(
+        "$userfirstname",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  ListTile showuserprofile() {
+    return ListTile(
+      onTap: () {
+        Navigator.pop(context);
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => userprofile_screen(),
+        );
+        Navigator.push(context, route);
+      },
+      leading: Icon(Icons.person),
+      title: Text('แสดงข้อมูลของผู้ใช้'),
+      subtitle: Text(''),
+    );
+  }
+
+  Widget menuSignOut() {
+    return Container(
+      decoration: BoxDecoration(color: Colors.red.shade700),
+      child: ListTile(
+        onTap: () async {
+          SharedPreferences prefernces = await SharedPreferences.getInstance();
+          prefernces.clear();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+              (route) => false);
+        },
+        leading: Icon(
+          Icons.exit_to_app,
+          color: Colors.white,
+        ),
+        title: Text(
+          'Sign Out',
+          style: TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+          'ออกจากระบบ',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Drawer showDrawer() => Drawer(
+        child: Stack(
+          children: <Widget>[
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                showHead(),
+                showuserprofile(),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                menuSignOut(),
+              ],
+            ),
+          ],
+        ),
+      );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('ยินดีต้อนรับuserIDที่ $userid'),
-      //   backgroundColor: Colors.black,
-      // ),
+      drawer: showDrawer(),
       body: Center(
         child: widgetList.elementAt(itemIndex),
       ),
@@ -66,9 +144,9 @@ class _HomeScreenState extends State<HomeScreen> {
             backgroundColor: Colors.purple,
           ),
           BottomNavigationBarItem(
-            label: "Profile",
+            label: "found",
             icon: Icon(
-              Icons.person,
+              Icons.graphic_eq,
             ),
             backgroundColor: Colors.orange,
           ),
@@ -100,25 +178,30 @@ class DashBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.greenAccent,
+        centerTitle: true,
         title: Text('Wellcome'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.logout,
-              color: Colors.white,
-            ),
-            onPressed: () async {
-              SharedPreferences prefernces =
-                  await SharedPreferences.getInstance();
-              prefernces.clear();
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage()),
-                  (route) => false);
-            },
-          )
+          // IconButton(
+          //   icon: Icon(
+          //     Icons.logout,
+          //     color: Colors.white,
+          //   ),
+          //   onPressed: () async {
+          //     SharedPreferences prefernces =
+          //         await SharedPreferences.getInstance();
+          //     prefernces.clear();
+          //     Navigator.of(context).pushAndRemoveUntil(
+          //         MaterialPageRoute(
+          //             builder: (BuildContext context) => LoginPage()),
+          //         (route) => false);
+          //   },
+          // )
         ],
       ),
       body: SingleChildScrollView(
