@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/main.dart';
+import 'package:leaflet_application/screens/main_repobj.dart';
 import 'package:leaflet_application/screens/seeobj_screen.dart';
 import 'package:leaflet_application/status.dart';
 import 'package:leaflet_application/screens/alldb_screens.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
 import 'package:leaflet_application/screens/reportobj_screens.dart';
+import '../widget/show_list_repobj_all.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     innitial();
-    currentWidget = userprofile_screen();
+    currentWidget = ShowListRepobjAll();
   }
 
   void innitial() async {
@@ -45,13 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Widget> widgetList = [
     DashBoard(),
-    reportobj_screen(),
+    MainReportobj(),
     seeobj_screen(),
     alldbscreens(),
   ];
 
   UserAccountsDrawerHeader showHead() {
     return UserAccountsDrawerHeader(
+      decoration: BoxDecoration(color: Colors.green.shade700),
       accountName: Text(
         "$useremail",
         style: TextStyle(color: Colors.white),
@@ -221,8 +224,8 @@ class DashBoard extends StatelessWidget {
                     color: Colors.black,
                   ),
                   textColor: Colors.black,
-                  title: Text('สถานะ'),
-                  subtitle: Text('ดูสถานะการเข้าใช้งาน'),
+                  title: Text('แจ้งหาของหาย'),
+                  subtitle: Text('แจ้งหาของหาย'),
                 ),
                 Row(
                   children: <Widget>[
@@ -232,7 +235,7 @@ class DashBoard extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => status()));
+                                  builder: (context) => MainReportobj()));
                         },
                         child: Text("Enter")),
                   ],

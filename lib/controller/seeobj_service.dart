@@ -6,7 +6,7 @@ import 'package:leaflet_application/models/reportobj.dart';
 import 'package:leaflet_application/models/location.dart';
 import 'package:leaflet_application/models/seeobj.dart';
 
-class repobj_service {
+class seeobj_service {
   static const String ROOT = 'http://10.0.2.2/LeafletDB/seeobj_action.php';
   // static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
@@ -95,7 +95,7 @@ class repobj_service {
   }
 
   // Method to update an category in Database...
-  static Future<dynamic> updaterseeobj(
+  static Future<dynamic> updateseeobj(
     String Seeobj_id,
     String Seeobj_name,
     // String Repobj_photo,

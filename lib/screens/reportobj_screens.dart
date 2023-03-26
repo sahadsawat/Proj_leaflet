@@ -13,6 +13,8 @@ import 'package:leaflet_application/controller/cate_service.dart';
 import 'package:leaflet_application/controller/locat_service.dart';
 import 'package:leaflet_application/controller/reportobj_service.dart';
 import 'package:leaflet_application/models/location.dart';
+import 'package:leaflet_application/screens/main_repobj.dart';
+
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,6 +34,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
   late List<category> _catenameSelected;
   String? _selectedlocatName;
   late List<location> _locatnameSelected;
+  String? repobjstatus = "1";
 
   io.File? fileimage;
   String? imagedata;
@@ -115,8 +118,15 @@ class _reportobj_screenState extends State<reportobj_screen> {
       return;
     }
     repobj_service
-        .addreportobj(repobjname.text, urlPathImage, repobjdetail.text,
-            repobjdate!, _selectedcateName!, _selectedlocatName!, userid!)
+        .addreportobj(
+            repobjname.text,
+            urlPathImage,
+            repobjstatus!,
+            repobjdetail.text,
+            repobjdate!,
+            _selectedcateName!,
+            _selectedlocatName!,
+            userid!)
         .then((result) {
       if ('success' == result) {
         Fluttertoast.showToast(
@@ -211,6 +221,13 @@ class _reportobj_screenState extends State<reportobj_screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
+        ),
         title: Text(
           'แจ้งตามหาสิ่งของ',
           style: TextStyle(fontWeight: FontWeight.bold),

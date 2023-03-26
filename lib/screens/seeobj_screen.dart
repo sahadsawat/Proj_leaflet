@@ -67,7 +67,7 @@ class _seeobj_screenState extends State<seeobj_screen> {
 
       return;
     }
-    repobj_service
+    seeobj_service
         .addseeobj(seeobjname.text, urlPathImage, seeobjdetail.text,
             seeobjdate!, _selectedcateName!, _selectedlocatName!, userid!)
         .then((result) {
@@ -164,6 +164,13 @@ class _seeobj_screenState extends State<seeobj_screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
+        ),
         title: Text(
           'เพิ่มสิ่งของที่พบเห็น',
           style: TextStyle(fontWeight: FontWeight.bold),

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-class reportobj {
+class reportobjmodel {
   String Repobj_id;
   String Repobj_name;
   String urlPathImage;
@@ -10,10 +10,10 @@ class reportobj {
   String Cate_id;
   String Locat_id;
   String User_id;
-  String Locat_name;
-  String User_email;
+  // String Locat_name;
+  // String User_email;
 
-  reportobj({
+  reportobjmodel({
     required this.Repobj_id,
     required this.Repobj_name,
     required this.urlPathImage,
@@ -23,11 +23,11 @@ class reportobj {
     required this.Cate_id,
     required this.Locat_id,
     required this.User_id,
-    required this.Locat_name,
-    required this.User_email,
+    // required this.Locat_name,
+    // required this.User_email,
   });
-  factory reportobj.fromJson(Map<String, dynamic> json) {
-    return reportobj(
+  factory reportobjmodel.fromJson(Map<String, dynamic> json) {
+    return reportobjmodel(
       Repobj_id: json['reportobj_id'] as String,
       Repobj_name: json['reportobj_name'] as String,
       urlPathImage: json['reportobj_photo'] as String,
@@ -37,8 +37,8 @@ class reportobj {
       Cate_id: json['cate_id'] as String,
       Locat_id: json['locat_id'] as String,
       User_id: json['user_id'] as String,
-      Locat_name: json['locat_name'] as String,
-      User_email: json['user_email'] as String,
+      // Locat_name: json['locat_name'] as String,
+      // User_email: json['user_email'] as String,
     );
   }
 
@@ -53,8 +53,8 @@ class reportobj {
     data['cate_id'] = Cate_id;
     data['locat_id'] = Locat_id;
     data['user_id'] = User_id;
-    data['locat_name'] = Locat_name;
-    data['user_email'] = User_email;
+    // data['locat_name'] = Locat_name;
+    // data['user_email'] = User_email;
     return data;
   }
 }

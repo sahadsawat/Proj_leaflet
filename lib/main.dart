@@ -8,17 +8,8 @@ import 'package:http/http.dart' as http;
 import 'DashBoard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:leaflet_application/models/user.dart';
+import 'package:leaflet_application/screens/main_repobj.dart';
 import 'package:dio/dio.dart';
-
-// void main() {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   dynamic token = SessionManager().get("token");
-//   runApp(
-//     MaterialApp(
-//       home: token != null ? HomeScreen() : MyApp(),
-//     ),
-//   );
-// }
 
 void main() {
   runApp(

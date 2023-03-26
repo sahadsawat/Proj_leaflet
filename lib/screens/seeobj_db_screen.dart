@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/location.dart';
-import 'package:leaflet_application/models/reportobj.dart';
-import 'package:leaflet_application/controller/reportobj_service.dart';
+import 'package:leaflet_application/models/seeobj.dart';
+import 'package:leaflet_application/controller/seeobj_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 
-class reportobj_db_screen extends StatefulWidget {
+class seeobj_db_screen extends StatefulWidget {
   //
-  reportobj_db_screen() : super();
+  seeobj_db_screen() : super();
 
-  final String title = 'ReportDataTable(จัดการข้อมูลแจ้งตามหา)';
+  final String title = 'FoundlostItemDataTable(จัดการข้อมูลพบเห็นสิ่งของ)';
 
   @override
-  reportobj_db_screenState createState() => reportobj_db_screenState();
+  seeobj_db_screenState createState() => seeobj_db_screenState();
 }
 
 class Debouncer {
@@ -37,18 +37,18 @@ class Status {
   final String id;
 }
 
-class reportobj_db_screenState extends State<reportobj_db_screen> {
-  late List<reportobj> _reportobj;
-  late List<reportobj> _filterreportobj;
+class seeobj_db_screenState extends State<seeobj_db_screen> {
+  late List<seeobj> _seeobj;
+  late List<seeobj> _filterseeobj;
 
   late GlobalKey<ScaffoldState> _scaffoldKey;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   // controller for the First Name TextField we are going to create.
-  late TextEditingController _reportobjidController;
-  late TextEditingController _reportobjnameController;
+  late TextEditingController _seeobjidController;
+  late TextEditingController _seeobjnameController;
   // controller for the Last Name TextField we are going to create.
 
-  late reportobj? _selectedreportobj;
+  late seeobj? _selectedseeobj;
   late bool _isUpdating;
   late String _titleProgress;
   //debounce
@@ -75,17 +75,17 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
   @override
   void initState() {
     super.initState();
-    _reportobj = [];
-    _filterreportobj = [];
+    _seeobj = [];
+    _filterseeobj = [];
 
     _isUpdating = false;
     _titleProgress = widget.title;
     _scaffoldKey = GlobalKey(); // key to get the context to show a SnackBar
-    _reportobjidController = TextEditingController();
-    _reportobjnameController = TextEditingController();
+    _seeobjidController = TextEditingController();
+    _seeobjnameController = TextEditingController();
     _locatNameSelected = [];
     _getlocation();
-    _getreportobj();
+    _getseeobj();
   }
 
   // Method to update title in the AppBar Title
@@ -129,22 +129,22 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
   //   });
   // }
 
-  _getreportobj() {
-    _showProgress('Loading reportobj...');
-    repobj_service.getrepobj().then((reportobj) {
+  _getseeobj() {
+    _showProgress('Loading seeobj...');
+    seeobj_service.getseeobj().then((seeobj) {
       setState(() {
-        _reportobj = reportobj;
-        _filterreportobj = reportobj;
+        _seeobj = seeobj;
+        _filterseeobj = seeobj;
       });
       _clearValues();
       _showProgress(widget.title); // Reset the title...
-      print("Lengthreport ${reportobj.length}");
+      print("Lengthseeobj ${seeobj.length}");
     });
   }
 
   _getlocation() {
-    _showProgress('Loading reportobj...');
-    repobj_service.getlocation().then((location) {
+    _showProgress('Loading seeobj...');
+    seeobj_service.getlocation().then((location) {
       setState(() {
         _locatNameSelected = location;
       });
@@ -154,21 +154,21 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
     });
   }
 
-  _updatereportobj(reportobj reportobj) {
-    if (_reportobjnameController.text.isEmpty || _selectedreportobj == null) {
+  _updateseeobj(seeobj seeobj) {
+    if (_seeobjnameController.text.isEmpty || _selectedseeobj == null) {
       print('Empty Fields');
       return;
     }
     setState(() {
       _isUpdating = true;
     });
-    _showProgress('Updating reportobj...');
-    repobj_service
-        .updatereportobj(
-            reportobj.Repobj_id, _reportobjnameController.text, selectedstatus!)
+    _showProgress('Updating seeobj...');
+    seeobj_service
+        .updateseeobj(
+            seeobj.Seeobj_id, _seeobjnameController.text, selectedstatus!)
         .then((result) {
       if ('success' == result) {
-        _getreportobj(); // Refresh the list after update
+        _getseeobj(); // Refresh the list after update
         setState(() {
           _isUpdating = false;
         });
@@ -177,26 +177,26 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
     });
   }
 
-  _deletereportobj(reportobj reportobj) {
-    _showProgress('Deleting reportobj...');
-    repobj_service.deletereportobj(reportobj.Repobj_id).then((result) {
+  _deleteseeobj(seeobj seeobj) {
+    _showProgress('Deleting seeobj...');
+    seeobj_service.deleteseeobj(seeobj.Seeobj_id).then((result) {
       if ('success' == result) {
-        _getreportobj(); // Refresh after delete...
+        _getseeobj(); // Refresh after delete...
       }
     });
   }
 
   // Method to clear TextField values
   _clearValues() {
-    _reportobjidController.text = '';
-    _reportobjnameController.text = '';
+    _seeobjidController.text = '';
+    _seeobjnameController.text = '';
     selectedstatus = null;
     _isUpdating = false;
   }
 
-  _showValues(reportobj reportobj) {
-    _reportobjidController.text = reportobj.Repobj_id;
-    _reportobjnameController.text = reportobj.Repobj_name;
+  _showValues(seeobj seeobj) {
+    _seeobjidController.text = seeobj.Seeobj_id;
+    _seeobjnameController.text = seeobj.Seeobj_name;
     _locatNameSelected == _selectedlocatName;
     dropdownItems == selectedstatus;
   }
@@ -215,7 +215,7 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
               label: Text('ID'),
             ),
             DataColumn(
-              label: Text('REPORT NAME'),
+              label: Text('FOUND NAME'),
             ),
             // DataColumn(
             //   label: Text('LOCATION NAME'),
@@ -231,19 +231,19 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
               label: Text('DELETE'),
             )
           ],
-          rows: _filterreportobj
+          rows: _filterseeobj
               .map(
-                (reportobj) => DataRow(
+                (seeobj) => DataRow(
                   cells: [
                     DataCell(
-                      Text(reportobj.Repobj_id),
+                      Text(seeobj.Seeobj_id),
                       // Add tap in the row and populate the
                       // textfields with the corresponding values to update
                       onTap: () {
-                        _showValues(reportobj);
+                        _showValues(seeobj);
                         // Set the Selected employee to Update
-                        _selectedreportobj = reportobj;
-                        _selectedlocatName = reportobj.Locat_id;
+                        _selectedseeobj = seeobj;
+                        _selectedlocatName = seeobj.Locat_id;
                         setState(() {
                           _isUpdating = true;
                         });
@@ -251,13 +251,13 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
                     ),
                     DataCell(
                       Text(
-                        reportobj.Repobj_name.toUpperCase(),
+                        seeobj.Seeobj_name.toUpperCase(),
                       ),
                       onTap: () {
-                        _showValues(reportobj);
+                        _showValues(seeobj);
                         // Set the Selected employee to Update
-                        _selectedreportobj = reportobj;
-                        _selectedlocatName = reportobj.Locat_id;
+                        _selectedseeobj = seeobj;
+                        _selectedlocatName = seeobj.Locat_id;
                         // Set flag updating to true to indicate in Update Mode
                         setState(() {
                           _isUpdating = true;
@@ -281,13 +281,13 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
                     // ),
                     DataCell(
                       Text(
-                        reportobj.Repobj_status,
+                        seeobj.Seeobj_status,
                       ),
                       onTap: () {
-                        _showValues(reportobj);
+                        _showValues(seeobj);
                         // Set the Selected employee to Update
-                        _selectedreportobj = reportobj;
-                        _selectedlocatName = reportobj.Locat_id;
+                        _selectedseeobj = seeobj;
+                        _selectedlocatName = seeobj.Locat_id;
                         // Set flag updating to true to indicate in Update Mode
                         setState(() {
                           _isUpdating = true;
@@ -296,13 +296,13 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
                     ),
                     DataCell(
                       Text(
-                        reportobj.User_email,
+                        seeobj.User_email,
                       ),
                       onTap: () {
-                        _showValues(reportobj);
+                        _showValues(seeobj);
                         // Set the Selected employee to Update
-                        _selectedreportobj = reportobj;
-                        _selectedlocatName = reportobj.Locat_id;
+                        _selectedseeobj = seeobj;
+                        _selectedlocatName = seeobj.Locat_id;
                         // Set flag updating to true to indicate in Update Mode
                         setState(() {
                           _isUpdating = true;
@@ -312,7 +312,7 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
                     DataCell(IconButton(
                       icon: Icon(Icons.delete),
                       onPressed: () {
-                        _deletereportobj(reportobj);
+                        _deleteseeobj(seeobj);
                       },
                     ))
                   ],
@@ -331,7 +331,7 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
       child: TextField(
         decoration: InputDecoration(
           contentPadding: EdgeInsets.all(5.0),
-          hintText: 'Filter report lose item name',
+          hintText: 'Filter found lose item name',
         ),
         onChanged: (string) {
           // We will start filtering when the user types in the textfield.
@@ -339,8 +339,8 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
           // Filter the original List and update the Filter list
           _debouncer.run(() {
             setState(() {
-              _filterreportobj = _reportobj
-                  .where((u) => (u.Repobj_name.toString()
+              _filterseeobj = _seeobj
+                  .where((u) => (u.Seeobj_name.toString()
                       .toLowerCase()
                       .contains(string.toLowerCase())))
                   .toList();
@@ -362,7 +362,7 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () {
-              _getreportobj();
+              _getseeobj();
               _getlocation();
             },
           )
@@ -391,9 +391,9 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
                   Padding(
                     padding: EdgeInsets.all(20.0),
                     child: TextFormField(
-                      controller: _reportobjnameController,
+                      controller: _seeobjnameController,
                       decoration: InputDecoration.collapsed(
-                        hintText: 'Report Name',
+                        hintText: 'Found item Name',
                       ),
                       validator: RequiredValidator(
                           errorText: "please record Report Name"),
@@ -445,7 +445,7 @@ class reportobj_db_screenState extends State<reportobj_db_screen> {
                       OutlinedButton(
                         child: Text('UPDATE'),
                         onPressed: () {
-                          _updatereportobj(_selectedreportobj!);
+                          _updateseeobj(_selectedseeobj!);
                         },
                       ),
                       OutlinedButton(

@@ -9,6 +9,7 @@ import 'package:leaflet_application/screens/reportobj_screens.dart';
 import 'package:leaflet_application/screens/user_screen.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
 import 'package:leaflet_application/screens/reportobj_db_screen.dart';
+import 'package:leaflet_application/screens/seeobj_db_screen.dart';
 import 'package:leaflet_application/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
@@ -165,7 +166,7 @@ class _alldbscreensState extends State<alldbscreens> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.add),
-                  label: Text("ReportOBJ(แจ้งหาสิ่งของ)",
+                  label: Text("ReportloseItem(แจ้งหาของหาย)",
                       style: TextStyle(fontSize: 20)),
                   onPressed: () {
                     Navigator.push(context,
@@ -182,8 +183,25 @@ class _alldbscreensState extends State<alldbscreens> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   icon: Icon(Icons.add),
-                  label:
-                      Text("แก้ไขข้อมูลผู้ใช้", style: TextStyle(fontSize: 20)),
+                  label: Text("FoundloseItem(สิ่งของที่มีผู้พบเห็น)",
+                      style: TextStyle(fontSize: 20)),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return seeobj_db_screen();
+                    }));
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.add),
+                  label: Text("Profile Setting(แก้ไขข้อมูลผู้ใช้)",
+                      style: TextStyle(fontSize: 20)),
                   onPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) {

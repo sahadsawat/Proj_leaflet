@@ -63,7 +63,7 @@ class repobj_service {
   static Future addreportobj(
       String Repobj_name,
       String urlPathImage,
-      // String repobj_status,
+      String repobj_status,
       String Repobj_detail,
       String Repobj_date,
       String Cate_id,
@@ -74,7 +74,7 @@ class repobj_service {
       map['action'] = _ADD_REPOBJ_ACTION;
       map['reportobj_name'] = Repobj_name;
       map['reportobj_photo'] = urlPathImage;
-      // map['reportobj_status'] = repobj_status;
+      map['reportobj_status'] = repobj_status;
       map['reportobj_detail'] = Repobj_detail;
       map['reportobj_date'] = Repobj_date;
       map['cate_id'] = Cate_id;
