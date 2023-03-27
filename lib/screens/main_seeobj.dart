@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:leaflet_application/main.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
-import 'package:leaflet_application/screens/reportobj_screen.dart';
-import '../widget/show_list_repobj_all.dart';
+import 'package:leaflet_application/screens/seeobj_screen.dart';
+import '../widget/show_list_seeobj_all.dart';
 import 'package:leaflet_application/DashBoard.dart';
 
-class MainReportobj extends StatefulWidget {
+class MainSeeobj extends StatefulWidget {
   @override
-  _MainReportobjState createState() => _MainReportobjState();
+  _MainSeeobjState createState() => _MainSeeobjState();
 }
 
-class _MainReportobjState extends State<MainReportobj> {
+class _MainSeeobjState extends State<MainSeeobj> {
   int itemIndex = 0;
   late SharedPreferences logindata;
   String? useremail;
@@ -22,7 +22,7 @@ class _MainReportobjState extends State<MainReportobj> {
   @override
   void initState() {
     super.initState();
-    currentWidget = ShowListRepobjAll();
+    currentWidget = ShowListSeeobjAll();
     innitial();
   }
 
@@ -49,7 +49,7 @@ class _MainReportobjState extends State<MainReportobj> {
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           },
         ),
-        title: Text('Report lose Item'),
+        title: Text('Found lose Item'),
         // title: Text(userfirstname == null
         //     ? 'Main User'
         //     : 'welcome $userfirstname login'),
@@ -62,7 +62,7 @@ class _MainReportobjState extends State<MainReportobj> {
             onPressed: () async {
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                      builder: (BuildContext context) => reportobj_screen()),
+                      builder: (BuildContext context) => seeobj_screen()),
                   (route) => false);
             },
           )

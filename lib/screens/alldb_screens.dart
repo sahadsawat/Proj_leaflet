@@ -5,7 +5,7 @@ import 'package:leaflet_application/screens/category_screen.dart';
 import 'package:leaflet_application/screens/faculty_screen.dart';
 import 'package:leaflet_application/screens/location_screen.dart';
 import 'package:leaflet_application/screens/major_screen.dart';
-import 'package:leaflet_application/screens/reportobj_screens.dart';
+import 'package:leaflet_application/screens/reportobj_screen.dart';
 import 'package:leaflet_application/screens/user_screen.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
 import 'package:leaflet_application/screens/reportobj_db_screen.dart';

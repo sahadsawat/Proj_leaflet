@@ -256,6 +256,7 @@ class _seeobj_screenState extends State<seeobj_screen> {
                   Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: DropdownButtonFormField(
+                        isExpanded: true,
                         decoration: InputDecoration(
                           labelText: 'Location',
                           // prefixIcon: Icon(

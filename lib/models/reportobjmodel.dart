@@ -10,8 +10,9 @@ class reportobjmodel {
   String Cate_id;
   String Locat_id;
   String User_id;
-  // String Locat_name;
-  // String User_email;
+  String Locat_name;
+  String Cate_name;
+  String User_email;
 
   reportobjmodel({
     required this.Repobj_id,
@@ -23,8 +24,9 @@ class reportobjmodel {
     required this.Cate_id,
     required this.Locat_id,
     required this.User_id,
-    // required this.Locat_name,
-    // required this.User_email,
+    required this.Locat_name,
+    required this.Cate_name,
+    required this.User_email,
   });
   factory reportobjmodel.fromJson(Map<String, dynamic> json) {
     return reportobjmodel(
@@ -37,8 +39,9 @@ class reportobjmodel {
       Cate_id: json['cate_id'] as String,
       Locat_id: json['locat_id'] as String,
       User_id: json['user_id'] as String,
-      // Locat_name: json['locat_name'] as String,
-      // User_email: json['user_email'] as String,
+      Locat_name: json['locat_name'] as String,
+      Cate_name: json['cate_name'] as String,
+      User_email: json['user_email'] as String,
     );
   }
 
@@ -53,8 +56,9 @@ class reportobjmodel {
     data['cate_id'] = Cate_id;
     data['locat_id'] = Locat_id;
     data['user_id'] = User_id;
-    // data['locat_name'] = Locat_name;
-    // data['user_email'] = User_email;
+    data['locat_name'] = Locat_name;
+    data['cate_name'] = Cate_name;
+    data['user_email'] = User_email;
     return data;
   }
 }

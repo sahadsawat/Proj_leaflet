@@ -313,6 +313,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
                   Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: DropdownButtonFormField(
+                        isExpanded: true,
                         decoration: InputDecoration(
                           labelText: 'Location',
                           // prefixIcon: Icon(

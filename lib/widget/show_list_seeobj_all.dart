@@ -2,56 +2,56 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:leaflet_application/models/reportobjmodel.dart';
-import 'package:leaflet_application/screens/showreportobjmenu.dart';
+import 'package:leaflet_application/models/seeobjmodel.dart';
+import 'package:leaflet_application/screens/showseeobjmenu.dart';
 import 'package:leaflet_application/models/user.dart';
 
-class ShowListRepobjAll extends StatefulWidget {
+class ShowListSeeobjAll extends StatefulWidget {
   @override
-  _ShowListRepobjAllState createState() => _ShowListRepobjAllState();
+  _ShowListSeeobjAllState createState() => _ShowListSeeobjAllState();
 }
 
-class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
-  List<reportobjmodel>? repobjModels;
-  List<Widget>? repobjCards;
+class _ShowListSeeobjAllState extends State<ShowListSeeobjAll> {
+  List<seeobjmodel>? seeobjModels;
+  List<Widget>? seeobjCards;
 
   @override
   void initState() {
     super.initState();
-    repobjModels = [];
-    repobjCards = [];
-    readreportobj();
+    seeobjModels = [];
+    seeobjCards = [];
+    readseeobj();
   }
 
-  Future<Null> readreportobj() async {
+  Future<Null> readseeobj() async {
     String url =
-        'http://10.0.2.2/LeafletDB/getRepobjWhereRepobj.php?isAdd=true&reportobj_status=1';
+        'http://10.0.2.2/LeafletDB/getSeeobjWhereSeeobj.php?isAdd=true&seeobj_status=1';
     Response response = await Dio().get(url);
     // print('value = $value');
     var result = json.decode(response.data);
     int index = 0;
     for (var map in result) {
-      reportobjmodel repobj = reportobjmodel.fromJson(map);
+      seeobjmodel seeobj = seeobjmodel.fromJson(map);
 
-      String repobjname = repobj.Repobj_name;
-      if (repobjname.isNotEmpty) {
+      String seeobjname = seeobj.Seeobj_name;
+      if (seeobjname.isNotEmpty) {
         // print('repobjname = ${repobj.Repobj_name}');
         setState(() {
-          repobjModels!.add(repobj);
-          repobjCards!.add(createCard(repobj, index));
+          seeobjModels!.add(seeobj);
+          seeobjCards!.add(createCard(seeobj, index));
           index++;
         });
       }
     }
   }
 
-  Widget createCard(reportobjmodel repobjModel, int index) {
+  Widget createCard(seeobjmodel seeobjModel, int index) {
     return GestureDetector(
       onTap: () {
         print('You Click index $index');
         MaterialPageRoute route = MaterialPageRoute(
-          builder: (context) => Showrepobjmenu(
-            repobjModel: repobjModels![index],
+          builder: (context) => Showseeobjmenu(
+            seeobjModel: seeobjModels![index],
           ),
         );
         Navigator.push(context, route);
@@ -60,15 +60,15 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
+            SizedBox(
               width: 80.0,
               height: 80.0,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+                    'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
               ),
             ),
-            Container(width: 120, child: Text(repobjModel.Repobj_name)),
+            Container(width: 120, child: Text(seeobjModel.Seeobj_name)),
           ],
         ),
       ),
@@ -77,13 +77,13 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
 
   @override
   Widget build(BuildContext context) {
-    return repobjCards!.length == 0
+    return seeobjCards!.length == 0
         ? MyStyle().showProgress()
         : GridView.extent(
             maxCrossAxisExtent: 220.0,
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10.0,
-            children: repobjCards!,
+            children: seeobjCards!,
           );
   }
 }
