@@ -117,7 +117,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
-        title: Text('คุณแน่ใจว่าจะ ปรับปรุงรายละเอียด?'),
+        title: Text('คุณแน่ใจว่าจะ ปรับปรุงข้อมูลผู้ใช้?'),
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -498,45 +498,42 @@ class _userprofile_screenState extends State<userprofile_screen> {
                         });
                       },
                     )),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: MaterialButton(
-                        color: Colors.green,
-                        child: Text('Edit',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            confirmDialog();
-                          }
-                        },
-                      ),
-                    ),
-                    // SizedBox(),
-                    // Expanded(
-                    //   child: MaterialButton(
-                    //     color: Colors.red,
-                    //     child: Text('Cancle',
-                    //         style: TextStyle(
-                    //             fontSize: 20,
-                    //             fontWeight: FontWeight.bold,
-                    //             color: Colors.black)),
-                    //     onPressed: () {
-                    //       // Navigator.push(
-                    //       //   context,
-                    //       //   MaterialPageRoute(
-                    //       //     builder: (context) =>
-                    //       //     clearvalue(),
-                    //       //   ),
-                    //       // );
-                    //     },
-                    //   ),
-                    // ),
-                  ],
-                )
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MaterialButton(
+                    color: Colors.green,
+                    child: Text('Edit',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        confirmDialog();
+                      }
+                    },
+                  ),
+                ),
+                // SizedBox(),
+                // Expanded(
+                //   child: MaterialButton(
+                //     color: Colors.red,
+                //     child: Text('Cancle',
+                //         style: TextStyle(
+                //             fontSize: 20,
+                //             fontWeight: FontWeight.bold,
+                //             color: Colors.black)),
+                //     onPressed: () {
+                //       // Navigator.push(
+                //       //   context,
+                //       //   MaterialPageRoute(
+                //       //     builder: (context) =>
+                //       //     clearvalue(),
+                //       //   ),
+                //       // );
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ),

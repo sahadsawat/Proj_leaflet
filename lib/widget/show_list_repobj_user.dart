@@ -1,19 +1,22 @@
 import 'dart:convert';
-
+import 'package:leaflet_application/screens/edit_repobj_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/reportobjmodel.dart';
-import 'package:leaflet_application/screens/showreportobjmenu.dart';
+import 'package:leaflet_application/screens/showreportobjmenuuser.dart';
+import 'package:leaflet_application/models/user.dart';
 
-class ShowListRepobjAll extends StatefulWidget {
+class ShowListRepobjUser extends StatefulWidget {
   @override
-  _ShowListRepobjAllState createState() => _ShowListRepobjAllState();
+  _ShowListRepobjUserState createState() => _ShowListRepobjUserState();
 }
 
-class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
+class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
   List<reportobjmodel>? repobjModels;
   List<Widget>? repobjCards;
-
+  bool loadStatus = true;
+  bool status = true;
   @override
   void initState() {
     super.initState();
@@ -23,25 +26,41 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
   }
 
   Future<Null> readreportobj() async {
+    if (repobjModels!.length != 0) {
+      loadStatus = true;
+      status = true;
+      repobjModels!.clear();
+    }
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? userid = preferences.getString('user_id');
     String url =
-        'http://10.0.2.2/LeafletDB/getRepobjWhereRepobj.php?isAdd=true&reportobj_status=1';
-    Response response = await Dio().get(url);
-    // print('value = $value');
-    var result = json.decode(response.data);
-    int index = 0;
-    for (var map in result) {
-      reportobjmodel repobj = reportobjmodel.fromJson(map);
+        'http://10.0.2.2/LeafletDB/getRepobjWhereUser.php?isAdd=true&user_id=$userid';
+    await Dio().get(url).then((value) {
+      setState(() {
+        loadStatus = false;
+      });
+      if (value.toString() != 'null') {
+        var result = json.decode(value.data);
+        int index = 0;
+        for (var map in result) {
+          reportobjmodel repobj = reportobjmodel.fromJson(map);
+          String repobjname = repobj.Repobj_name;
+          if (repobjname.isNotEmpty) {
+            // print('repobjname = ${repobj.Repobj_name}');
+            setState(() {
+              repobjModels!.add(repobj);
+              repobjCards!.add(createCard(repobj, index));
 
-      String repobjname = repobj.Repobj_name;
-      if (repobjname.isNotEmpty) {
-        // print('repobjname = ${repobj.Repobj_name}');
+              index++;
+            });
+          }
+        }
+      } else {
         setState(() {
-          repobjModels!.add(repobj);
-          repobjCards!.add(createCard(repobj, index));
-          index++;
+          status = false;
         });
       }
-    }
+    });
   }
 
   Widget createCard(reportobjmodel repobjModel, int index) {
@@ -49,33 +68,47 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
       onTap: () {
         print('You Click index $index');
         MaterialPageRoute route = MaterialPageRoute(
-          builder: (context) => Showrepobjmenu(
+          builder: (context) => Showrepobjmenuuser(
             repobjModel: repobjModels![index],
           ),
         );
         Navigator.push(context, route);
       },
       child: Card(
-        // color: Color.fromARGB(255, 144, 255, 214),
-        // shadowColor: Colors.black,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: 80.0,
-              height: 80.0,
-              child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
-              ),
+            Row(
+              children: [
+                Container(
+                  width: 100.0,
+                  height: 100.0,
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Container(width: 120, child: Text(repobjModel.Repobj_name)),
+              ],
             ),
-            SizedBox(
-                width: 120,
-                child: Text(
-                  repobjModel.Repobj_name,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )),
-            SizedBox(width: 120, child: Text(repobjModel.Repobj_date)),
+            Container(width: 120, child: Text(repobjModel.Repobj_date)),
+            IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: Colors.green,
+              ),
+              onPressed: () {
+                MaterialPageRoute route = MaterialPageRoute(
+                  builder: (context) => EditRepobjUser(
+                    repobjModel: repobjModels![index],
+                  ),
+                );
+                Navigator.push(context, route).then((value) => readreportobj());
+              },
+            ),
           ],
         ),
       ),
@@ -84,15 +117,28 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
 
   @override
   Widget build(BuildContext context) {
-    return repobjCards!.length == 0
-        ? MyStyle().showProgress()
-        : GridView.extent(
-            maxCrossAxisExtent: 220.0,
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-            children: repobjCards!,
+    return Stack(
+      children: <Widget>[
+        loadStatus ? MyStyle().showProgress() : showContent(),
+      ],
+    );
+  }
+
+  Widget showContent() {
+    return status
+        ? showListrepobj()
+        : Center(
+            child: Text('ยังไม่มีรายการ'),
           );
   }
+
+  Widget showListrepobj() => GridView.count(
+        crossAxisCount: 1,
+        // childAspectRatio: (1 / 1),
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
+        children: repobjCards!,
+      );
 }
 
 class MyStyle {
@@ -101,8 +147,8 @@ class MyStyle {
 
   Widget showProgress() {
     return Center(
-        // child: CircularProgressIndicator(),
-        );
+      child: CircularProgressIndicator(),
+    );
   }
 
   TextStyle mainTitle = TextStyle(

@@ -26,9 +26,7 @@ class reportobj_screen extends StatefulWidget {
 class _reportobj_screenState extends State<reportobj_screen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController repobjname = TextEditingController();
-  TextEditingController repobjcate = TextEditingController();
   TextEditingController repobjdetail = TextEditingController();
-  TextEditingController repobjphoto = TextEditingController();
   late String? repobjdate;
   String? _selectedcateName;
   late List<category> _catenameSelected;
@@ -112,7 +110,13 @@ class _reportobj_screenState extends State<reportobj_screen> {
     print('urlPathImage = http://10.0.2.2/LeafletDB/reportimage/$urlPathImage');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
-    if (repobjname.text.isEmpty) {
+    if (repobjname.text.isEmpty ||
+        urlPathImage.isEmpty ||
+        repobjstatus!.isEmpty ||
+        repobjdetail.text.isEmpty ||
+        repobjdate!.isEmpty ||
+        _selectedcateName!.isEmpty ||
+        _selectedlocatName!.isEmpty) {
       print('Empty Fields');
 
       return;

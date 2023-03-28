@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:leaflet_application/models/reportobjmodel.dart';
+import 'package:leaflet_application/screens/edit_repobj_user.dart';
 
-class Aboutrepobj extends StatefulWidget {
+class Aboutrepobjuser extends StatefulWidget {
   final reportobjmodel? repobjModel;
-  Aboutrepobj({Key? key, this.repobjModel}) : super(key: key);
+  Aboutrepobjuser({Key? key, this.repobjModel}) : super(key: key);
   @override
-  _AboutrepobjState createState() => _AboutrepobjState();
+  _AboutrepobjuserState createState() => _AboutrepobjuserState();
 }
 
-class _AboutrepobjState extends State<Aboutrepobj> {
+class _AboutrepobjuserState extends State<Aboutrepobjuser> {
   reportobjmodel? repobjModel;
   String? distanceString;
+  List<reportobjmodel>? repobjModels;
 
   @override
   void initState() {
     super.initState();
     repobjModel = widget.repobjModel;
+    repobjModels = [];
   }
 
   @override
