@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:leaflet_application/widget/show_list_seeobj_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:leaflet_application/main.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
 import 'package:leaflet_application/screens/seeobj_screen.dart';
-import '../widget/show_list_seeobj_all.dart';
 import 'package:leaflet_application/DashBoard.dart';
 
-class MainSeeobj extends StatefulWidget {
+class MainSeeobjUser extends StatefulWidget {
   @override
-  _MainSeeobjState createState() => _MainSeeobjState();
+  _MainSeeobjUserState createState() => _MainSeeobjUserState();
 }
 
-class _MainSeeobjState extends State<MainSeeobj> {
+class _MainSeeobjUserState extends State<MainSeeobjUser> {
   int itemIndex = 0;
   late SharedPreferences logindata;
   String? useremail;
@@ -22,7 +22,7 @@ class _MainSeeobjState extends State<MainSeeobj> {
   @override
   void initState() {
     super.initState();
-    currentWidget = ShowListSeeobjAll();
+    currentWidget = ShowListSeeobjUser();
     innitial();
   }
 
@@ -38,10 +38,9 @@ class _MainSeeobjState extends State<MainSeeobj> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 219, 254, 255),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.greenAccent,
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -50,7 +49,7 @@ class _MainSeeobjState extends State<MainSeeobj> {
                 context, MaterialPageRoute(builder: (context) => HomeScreen()));
           },
         ),
-        title: Text('Found lose Item'),
+        title: Text('My Found lose Item'),
         // title: Text(userfirstname == null
         //     ? 'Main User'
         //     : 'welcome $userfirstname login'),

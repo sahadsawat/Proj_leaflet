@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:leaflet_application/models/reportobjmodel.dart';
+import 'package:leaflet_application/models/seeobjmodel.dart';
 
-class Aboutrepobjuser extends StatefulWidget {
-  final reportobjmodel? repobjModel;
-  Aboutrepobjuser({Key? key, this.repobjModel}) : super(key: key);
+class Aboutseeobjuser extends StatefulWidget {
+  final seeobjmodel? seeobjModel;
+  Aboutseeobjuser({Key? key, this.seeobjModel}) : super(key: key);
   @override
-  _AboutrepobjuserState createState() => _AboutrepobjuserState();
+  _AboutseeobjuserState createState() => _AboutseeobjuserState();
 }
 
-class _AboutrepobjuserState extends State<Aboutrepobjuser> {
-  reportobjmodel? repobjModel;
+class _AboutseeobjuserState extends State<Aboutseeobjuser> {
+  seeobjmodel? seeobjModel;
   String? distanceString;
-  List<reportobjmodel>? repobjModels;
+  List<seeobjmodel>? seeobjModels;
 
   @override
   void initState() {
     super.initState();
-    repobjModel = widget.repobjModel;
-    repobjModels = [];
+    seeobjModel = widget.seeobjModel;
+    seeobjModels = [];
   }
 
   @override
@@ -33,7 +33,7 @@ class _AboutrepobjuserState extends State<Aboutrepobjuser> {
                 width: 150.0,
                 height: 150.0,
                 child: Image.network(
-                  'http://10.0.2.2/LeafletDB/reportimage/${repobjModel!.urlPathImage}',
+                  'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel!.urlPathImage}',
                   fit: BoxFit.cover,
                 ),
               ),
@@ -41,8 +41,8 @@ class _AboutrepobjuserState extends State<Aboutrepobjuser> {
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text("ชื่อของที่แจ้าหา"),
-            subtitle: Text(repobjModel!.Repobj_name,
+            title: Text("ชื่อของที่ตามหา"),
+            subtitle: Text(seeobjModel!.Seeobj_name,
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -51,27 +51,27 @@ class _AboutrepobjuserState extends State<Aboutrepobjuser> {
           ListTile(
             leading: Icon(Icons.details),
             title: Text("รายละเอียด"),
-            subtitle: Text(repobjModel!.Repobj_detail),
+            subtitle: Text(seeobjModel!.Seeobj_detail),
           ),
           ListTile(
             leading: Icon(Icons.update),
             title: Text("เวลาที่ของหาย"),
-            subtitle: Text(repobjModel!.Repobj_date),
+            subtitle: Text(seeobjModel!.Seeobj_date),
           ),
           ListTile(
             leading: Icon(Icons.category),
             title: Text("ประเภท หมวดหมู่"),
-            subtitle: Text(repobjModel!.Cate_name),
+            subtitle: Text(seeobjModel!.Cate_name),
           ),
           ListTile(
             leading: Icon(Icons.map),
             title: Text("สถานที่"),
-            subtitle: Text(repobjModel!.Locat_name),
+            subtitle: Text(seeobjModel!.Locat_name),
           ),
           ListTile(
             leading: Icon(Icons.email),
             title: Text("Emailผู้แจ้งหา"),
-            subtitle: Text(repobjModel!.User_email),
+            subtitle: Text(seeobjModel!.User_email),
           ),
         ],
       ),

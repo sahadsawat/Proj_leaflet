@@ -1,41 +1,41 @@
 import 'dart:convert';
 import 'package:leaflet_application/DashBoard.dart';
-import 'package:leaflet_application/screens/edit_repobj_user.dart';
+import 'package:leaflet_application/screens/edit_seeobj_user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:leaflet_application/models/reportobjmodel.dart';
-import 'package:leaflet_application/screens/showreportobjmenuuser.dart';
+import 'package:leaflet_application/models/seeobjmodel.dart';
+import 'package:leaflet_application/screens/showseeobjmenuuser.dart';
 import 'package:leaflet_application/models/user.dart';
 
-class ShowListRepobjUser extends StatefulWidget {
+class ShowListSeeobjUser extends StatefulWidget {
   @override
-  _ShowListRepobjUserState createState() => _ShowListRepobjUserState();
+  _ShowListSeeobjUserState createState() => _ShowListSeeobjUserState();
 }
 
-class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
-  List<reportobjmodel>? repobjModels;
-  List<Widget>? repobjCards;
+class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
+  List<seeobjmodel>? seeobjModels;
+  List<Widget>? seeobjCards;
   bool loadStatus = true;
   bool status = true;
   @override
   void initState() {
     super.initState();
-    repobjModels = [];
-    repobjCards = [];
-    readreportobj();
+    seeobjModels = [];
+    seeobjCards = [];
+    readseeobj();
   }
 
-  Future<Null> readreportobj() async {
-    if (repobjModels!.length != 0) {
+  Future<Null> readseeobj() async {
+    if (seeobjModels!.length != 0) {
       loadStatus = true;
       status = true;
-      repobjModels!.clear();
+      seeobjModels!.clear();
     }
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
     String url =
-        'http://10.0.2.2/LeafletDB/getRepobjWhereUser.php?isAdd=true&user_id=$userid';
+        'http://10.0.2.2/LeafletDB/getSeeobjWhereUser.php?isAdd=true&user_id=$userid';
     await Dio().get(url).then((value) {
       setState(() {
         loadStatus = false;
@@ -44,13 +44,13 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
         var result = json.decode(value.data);
         int index = 0;
         for (var map in result) {
-          reportobjmodel repobj = reportobjmodel.fromJson(map);
-          String repobjname = repobj.Repobj_name;
-          if (repobjname.isNotEmpty) {
-            // print('repobjname = ${repobj.Repobj_name}');
+          seeobjmodel seeobj = seeobjmodel.fromJson(map);
+          String seeobjname = seeobj.Seeobj_name;
+          if (seeobjname.isNotEmpty) {
+            // print('seeobjname = ${seeobj.Seeobj_name}');
             setState(() {
-              repobjModels!.add(repobj);
-              repobjCards!.add(createCard(repobj, index));
+              seeobjModels!.add(seeobj);
+              seeobjCards!.add(createCard(seeobj, index));
 
               index++;
             });
@@ -64,13 +64,13 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
     });
   }
 
-  Widget createCard(reportobjmodel repobjModel, int index) {
+  Widget createCard(seeobjmodel seeobjModel, int index) {
     return GestureDetector(
       onTap: () {
         print('You Click index $index');
         MaterialPageRoute route = MaterialPageRoute(
-          builder: (context) => Showrepobjmenuuser(
-            repobjModel: repobjModels![index],
+          builder: (context) => Showseeobjmenuuser(
+            seeobjModel: seeobjModels![index],
           ),
         );
         Navigator.push(context, route);
@@ -86,16 +86,16 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
                   height: 100.0,
                   child: CircleAvatar(
                     backgroundImage: NetworkImage(
-                        'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+                        'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
                   ),
                 ),
                 SizedBox(
                   width: 10,
                 ),
-                Container(width: 120, child: Text(repobjModel.Repobj_name)),
+                Container(width: 120, child: Text(seeobjModel.Seeobj_name)),
               ],
             ),
-            Container(width: 120, child: Text(repobjModel.Repobj_date)),
+            Container(width: 120, child: Text(seeobjModel.Seeobj_date)),
             IconButton(
               icon: Icon(
                 Icons.edit,
@@ -103,11 +103,11 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
               ),
               onPressed: () {
                 MaterialPageRoute route = MaterialPageRoute(
-                  builder: (context) => EditRepobjUser(
-                    repobjModel: repobjModels![index],
+                  builder: (context) => EditSeeobjUser(
+                    seeobjModel: seeobjModels![index],
                   ),
                 );
-                Navigator.push(context, route).then((value) => readreportobj());
+                Navigator.push(context, route).then((value) => readseeobj());
               },
             ),
             IconButton(
@@ -115,7 +115,7 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
                 Icons.delete,
                 color: Colors.red,
               ),
-              onPressed: () => deleterepobj(repobjModels![index]),
+              onPressed: () => deleteseeobj(seeobjModels![index]),
             ),
           ],
         ),
@@ -134,26 +134,26 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
 
   Widget showContent() {
     return status
-        ? showListrepobj()
+        ? showListseeobj()
         : Center(
             child: Text('ยังไม่มีรายการ'),
           );
   }
 
-  Widget showListrepobj() => GridView.count(
+  Widget showListseeobj() => GridView.count(
         crossAxisCount: 1,
         // childAspectRatio: (1 / 1),
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
-        children: repobjCards!,
+        children: seeobjCards!,
       );
 
-  Future<Null> deleterepobj(reportobjmodel repobjModel) async {
+  Future<Null> deleteseeobj(seeobjmodel seeobjModel) async {
     showDialog(
       context: context,
       builder: (context) => SimpleDialog(
         title: MyStyle()
-            .showTitleH2('คุณต้องการลบ ข้อมูล ${repobjModel.Repobj_name} ?'),
+            .showTitleH2('คุณต้องการลบ ข้อมูล ${seeobjModel.Seeobj_name} ?'),
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -167,8 +167,8 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
                     ),
                   );
                   String url =
-                      'http://10.0.2.2/LeafletDB/deleteRepobjWhereId.php?isAdd=true&reportobj_id=${repobjModel.Repobj_id}';
-                  await Dio().get(url).then((value) => readreportobj());
+                      'http://10.0.2.2/LeafletDB/deleteSeeobjWhereId.php?isAdd=true&seeobj_id=${seeobjModel.Seeobj_id}';
+                  await Dio().get(url).then((value) => readseeobj());
                 },
                 child: Text('ยืนยัน'),
               ),

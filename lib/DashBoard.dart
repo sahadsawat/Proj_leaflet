@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/main.dart';
 import 'package:leaflet_application/screens/main_repobj.dart';
+import 'package:leaflet_application/screens/main_seeobj_user.dart';
 import 'package:leaflet_application/screens/main_repobj_user.dart';
 import 'package:leaflet_application/screens/main_seeobj.dart';
 import 'package:leaflet_application/screens/seeobj_screen.dart';
@@ -56,7 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   UserAccountsDrawerHeader showHead() {
     return UserAccountsDrawerHeader(
-      decoration: BoxDecoration(color: Colors.green.shade700),
+      decoration: BoxDecoration(
+        color: Color.fromARGB(255, 10, 185, 100),
+      ),
       accountName: Text(
         "$useremail",
         style: TextStyle(color: Colors.white),
@@ -92,8 +95,27 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         Navigator.push(context, route);
       },
-      leading: Icon(Icons.home_filled),
+      leading: Icon(
+        Icons.view_list,
+      ),
       title: Text('แสดงข้อมูลแจ้งหาของหายของผู้ใช้'),
+      subtitle: Text(''),
+    );
+  }
+
+  ListTile showuserseeobj() {
+    return ListTile(
+      onTap: () {
+        Navigator.pop(context);
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => MainSeeobjUser(),
+        );
+        Navigator.push(context, route);
+      },
+      leading: Icon(
+        Icons.view_list,
+      ),
+      title: Text('แสดงข้อมูลพบเจอของหายของผู้ใช้'),
       subtitle: Text(''),
     );
   }
@@ -134,6 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 showHead(),
                 showuserprofile(),
                 showuserreportobj(),
+                showuserseeobj(),
               ],
             ),
             Column(
@@ -157,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             label: "Home",
             icon: Icon(Icons.home),
-            backgroundColor: Colors.grey,
+            backgroundColor: Color.fromARGB(255, 10, 185, 100),
           ),
           BottomNavigationBarItem(
             label: "AllReport",
@@ -198,15 +221,16 @@ class DashBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 219, 254, 255),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Color.fromARGB(255, 10, 185, 100),
         centerTitle: true,
-        title: Text('Wellcome'),
+        title: Text('LeafLet Application'),
         actions: <Widget>[
           // IconButton(
           //   icon: Icon(
@@ -228,7 +252,7 @@ class DashBoard extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           child: Card(
-            color: Colors.greenAccent,
+            color: Color.fromARGB(255, 255, 200, 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
@@ -237,12 +261,18 @@ class DashBoard extends StatelessWidget {
               children: <Widget>[
                 ListTile(
                   leading: Icon(
-                    Icons.analytics,
+                    Icons.push_pin,
                     size: 50.0,
                     color: Colors.black,
                   ),
                   textColor: Colors.black,
-                  title: Text('หน้าแจ้งของหายของคุณ'),
+                  title: Text(
+                    'หน้าแจ้งของหายของคุณ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   subtitle: Text('แจ้งหาของหาย'),
                 ),
                 Row(
@@ -254,6 +284,38 @@ class DashBoard extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => MainReportobjUser()));
+                        },
+                        child: Text("Enter")),
+                  ],
+                ),
+                SizedBox(
+                  height: 1,
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.push_pin,
+                    size: 50.0,
+                    color: Colors.black,
+                  ),
+                  textColor: Colors.black,
+                  title: Text(
+                    'หน้าพบของหายของคุณ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text('พบของหาย'),
+                ),
+                Row(
+                  children: <Widget>[
+                    TextButton(
+                        style: TextButton.styleFrom(primary: Colors.black),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MainSeeobjUser()));
                         },
                         child: Text("Enter")),
                   ],

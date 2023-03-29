@@ -41,7 +41,7 @@ class _MainReportobjState extends State<MainReportobj> {
       backgroundColor: Color.fromARGB(255, 219, 254, 255),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.purple,
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),

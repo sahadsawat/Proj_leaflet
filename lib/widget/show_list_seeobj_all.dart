@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/seeobjmodel.dart';
 import 'package:leaflet_application/screens/showseeobjmenu.dart';
-import 'package:leaflet_application/models/user.dart';
 
 class ShowListSeeobjAll extends StatefulWidget {
   @override
