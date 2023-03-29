@@ -11,6 +11,7 @@ import 'package:leaflet_application/models/major.dart';
 import 'package:leaflet_application/models/major2.dart';
 import 'package:leaflet_application/models/major3.dart';
 import 'package:leaflet_application/controller/ma_service.dart';
+import 'package:leaflet_application/screens/login_screen.dart';
 
 class Register_screen extends StatefulWidget {
   @override
@@ -129,7 +130,7 @@ class _Register_screenState extends State<Register_screen> {
           'Leaflet Application',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Color.fromARGB(255, 10, 185, 100),
       ),
       body: Container(
         child: Form(

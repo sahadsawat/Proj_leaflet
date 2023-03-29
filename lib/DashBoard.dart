@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:leaflet_application/main.dart';
+import 'package:leaflet_application/screens/login_screen.dart';
 import 'package:leaflet_application/screens/main_repobj.dart';
 import 'package:leaflet_application/screens/main_seeobj_user.dart';
 import 'package:leaflet_application/screens/main_repobj_user.dart';
 import 'package:leaflet_application/screens/main_seeobj.dart';
-import 'package:leaflet_application/screens/seeobj_screen.dart';
-import 'package:leaflet_application/status.dart';
 import 'package:leaflet_application/screens/alldb_screens.dart';
 import 'package:leaflet_application/screens/userprofile_screen.dart';
-import 'package:leaflet_application/screens/reportobj_screen.dart';
 import '../widget/show_list_repobj_all.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -209,8 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
             print(index);
           });
         },
-        selectedItemColor: Colors.tealAccent,
-        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.black,
       ),
     );
   }

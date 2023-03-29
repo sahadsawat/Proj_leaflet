@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:leaflet_application/models/faculty.dart';
+import 'package:leaflet_application/screens/userprofile_edit_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -334,6 +335,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: false,
                     controller: textuseremail,
                     onChanged: (value) {
                       setState(() => useremail = value);
@@ -357,6 +359,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: false,
                     controller: textpassword,
                     onChanged: (value) => password = value.trim(),
                     // initialValue: password,
@@ -374,6 +377,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: false,
                     controller: textfirstname,
                     onChanged: (value) => firstname = value,
                     // initialValue: firstname,
@@ -392,6 +396,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: false,
                     controller: textlastname,
                     onChanged: (value) => lastname = value,
                     // initialValue: lastname,
@@ -410,6 +415,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: false,
                     controller: textusertel,
                     onChanged: (value) => usertel = value,
                     // initialValue: usertel,
@@ -429,6 +435,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextFormField(
+                    enabled: false,
                     controller: textuserlineid,
                     onChanged: (value) => userlineid = value,
                     // initialValue: userlineid,
@@ -475,6 +482,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
                     padding: const EdgeInsets.all(8.0),
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(
+                        enabled: false,
                         labelText: 'Major',
                         // prefixIcon: Icon(
                         //   Icons.,
@@ -501,16 +509,19 @@ class _userprofile_screenState extends State<userprofile_screen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: MaterialButton(
-                    color: Colors.green,
+                    color: Colors.orange,
                     child: Text('Edit',
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
                     onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        confirmDialog();
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => userprofile_edit_screen(),
+                        ),
+                      );
                     },
                   ),
                 ),

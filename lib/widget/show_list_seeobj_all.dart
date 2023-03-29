@@ -67,7 +67,13 @@ class _ShowListSeeobjAllState extends State<ShowListSeeobjAll> {
                     'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
               ),
             ),
-            Container(width: 120, child: Text(seeobjModel.Seeobj_name)),
+            SizedBox(
+                width: 120,
+                child: Text(
+                  seeobjModel.Seeobj_name,
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                )),
+            SizedBox(width: 120, child: Text(seeobjModel.Seeobj_date)),
           ],
         ),
       ),
