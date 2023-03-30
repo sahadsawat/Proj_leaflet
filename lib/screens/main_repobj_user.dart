@@ -46,8 +46,9 @@ class _MainReportobjUserState extends State<MainReportobjUser> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.pop(
+              context,
+            );
           },
         ),
         title: Text('My Report lose Item'),
@@ -61,10 +62,10 @@ class _MainReportobjUserState extends State<MainReportobjUser> {
               color: Colors.white,
             ),
             onPressed: () async {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => reportobj_screen()),
-                  (route) => false);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => reportobj_screen()),
+              );
             },
           )
         ],

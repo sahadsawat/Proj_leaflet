@@ -168,7 +168,7 @@ class _userprofile_edit_screenState extends State<userprofile_edit_screen> {
 
     Response response = await Dio().get(url);
     if (response.toString() == 'true') {
-      Navigator.push(
+      Navigator.pop(
         context,
         MaterialPageRoute(
           builder: (context) => HomeApp(),

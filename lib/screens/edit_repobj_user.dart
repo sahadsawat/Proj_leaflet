@@ -223,51 +223,6 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
                     ),
                   ),
                   groupImage(),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Container(
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       children: <Widget>[
-                  //         Text(
-                  //           "Select image ->",
-                  //           style: TextStyle(
-                  //               fontSize: 25, fontWeight: FontWeight.bold),
-                  //         ),
-                  //         IconButton(
-                  //           icon: Icon(Icons.add_photo_alternate),
-                  //           onPressed: () => chooseImage(ImageSource.gallery),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Container(
-                  //     width: 200.0,
-                  //     height: 200.0,
-                  //     child: fileimage == null
-                  //         ? Image.asset('images/leaf.png')
-                  //         : Image.file(fileimage!),
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: MaterialButton(
-                  //     color: Colors.green,
-                  //     child: Text('SAVE DATA',
-                  //         style: TextStyle(
-                  //             fontSize: 20,
-                  //             fontWeight: FontWeight.bold,
-                  //             color: Colors.white)),
-                  //     onPressed: () {
-                  //       // if (formKey.currentState!.validate()) {
-                  //       //   _editreportobj();
-                  //       // }
-                  //     },
-                  //   ),
-                  // ),
                 ],
               ),
             )),
@@ -342,11 +297,8 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
           'http://10.0.2.2/LeafletDB/editRepobjWhereId.php?isAdd=true&reportobj_id=$repobjid&reportobj_name=$repobjname&reportobj_photo=$urlPathImage&reportobj_status=$repobjstatus&reportobj_detail=$repobjdetail&reportobj_date=$repobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
-          Navigator.push(
+          Navigator.pop(
             context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(),
-            ),
           );
         } else {
           // normalDialog(context, 'กรุณาลองใหม่ มีอะไร ? ผิดพลาด');
@@ -359,11 +311,8 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
           'http://10.0.2.2/LeafletDB/editRepobjWhereId.php?isAdd=true&reportobj_id=$repobjid&reportobj_name=$repobjname&reportobj_photo=$urlPathImage&reportobj_status=$repobjstatus&reportobj_detail=$repobjdetail&reportobj_date=$repobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
-          Navigator.push(
+          Navigator.pop(
             context,
-            MaterialPageRoute(
-              builder: (context) => HomeScreen(),
-            ),
           );
         } else {
           // normalDialog(context, 'กรุณาลองใหม่ มีอะไร ? ผิดพลาด');

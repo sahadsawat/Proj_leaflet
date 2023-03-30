@@ -76,46 +76,62 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
         Navigator.push(context, route);
       },
       child: Card(
+        // color: Colors.deepPurpleAccent,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ListTile(
+              leading: FittedBox(
+                fit: BoxFit.cover,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}',
+                  ),
+                  backgroundColor: Colors.transparent,
+                  minRadius: 50,
+                  maxRadius: 75,
+                ),
+              ),
+              textColor: Colors.black,
+              title: Text(repobjModel.Repobj_name),
+              subtitle: Text(repobjModel.Repobj_date),
+            ),
+            // SizedBox(
+            //   width: 10,
+            // ),
+            // Container(width: 120, child: Text(repobjModel.Repobj_name)),
+            // Container(width: 120, child: Text(repobjModel.Repobj_date)),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  width: 100.0,
-                  height: 100.0,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.green,
                   ),
+                  onPressed: () {
+                    MaterialPageRoute route = MaterialPageRoute(
+                      builder: (context) => EditRepobjUser(
+                        repobjModel: repobjModels![index],
+                      ),
+                    );
+                    Navigator.push(context, route)
+                        .then((value) => readreportobj());
+                  },
                 ),
-                SizedBox(
-                  width: 10,
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onPressed: () => deleterepobj(repobjModels![index]),
                 ),
-                Container(width: 120, child: Text(repobjModel.Repobj_name)),
               ],
-            ),
-            Container(width: 120, child: Text(repobjModel.Repobj_date)),
-            IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: Colors.green,
-              ),
-              onPressed: () {
-                MaterialPageRoute route = MaterialPageRoute(
-                  builder: (context) => EditRepobjUser(
-                    repobjModel: repobjModels![index],
-                  ),
-                );
-                Navigator.push(context, route).then((value) => readreportobj());
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-              onPressed: () => deleterepobj(repobjModels![index]),
             ),
           ],
         ),
@@ -142,7 +158,9 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
 
   Widget showListrepobj() => GridView.count(
         crossAxisCount: 1,
-        // childAspectRatio: (1 / 1),
+        childAspectRatio: (1 / 0.5),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
         children: repobjCards!,
@@ -160,11 +178,8 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
             children: <Widget>[
               TextButton(
                 onPressed: () async {
-                  Navigator.push(
+                  Navigator.pop(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
                   );
                   String url =
                       'http://10.0.2.2/LeafletDB/deleteRepobjWhereId.php?isAdd=true&reportobj_id=${repobjModel.Repobj_id}';

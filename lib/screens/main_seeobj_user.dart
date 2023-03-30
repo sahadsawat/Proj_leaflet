@@ -46,8 +46,7 @@ class _MainSeeobjUserState extends State<MainSeeobjUser> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.pop(context);
           },
         ),
         title: Text('My Found lose Item'),

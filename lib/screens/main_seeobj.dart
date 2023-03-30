@@ -44,13 +44,6 @@ class _MainSeeobjState extends State<MainSeeobj> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.orange,
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
         title: Text('Found lose Item'),
         // title: Text(userfirstname == null
         //     ? 'Main User'
@@ -62,10 +55,10 @@ class _MainSeeobjState extends State<MainSeeobj> {
               color: Colors.white,
             ),
             onPressed: () async {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => seeobj_screen()),
-                  (route) => false);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => seeobj_screen()),
+              );
             },
           )
         ],

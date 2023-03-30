@@ -1,17 +1,39 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:leaflet_application/models/reportobj.dart';
 import 'package:leaflet_application/models/reportobjmodel.dart';
 import 'package:leaflet_application/screens/showreportobjmenu.dart';
+import 'package:leaflet_application/controller/reportobj_service.dart';
 
 class ShowListRepobjAll extends StatefulWidget {
   @override
   _ShowListRepobjAllState createState() => _ShowListRepobjAllState();
 }
 
+class Debouncer {
+  final int milliseconds;
+  VoidCallback? action;
+  Timer? _timer;
+
+  Debouncer({required this.milliseconds});
+
+  run(VoidCallback action) {
+    if (_timer?.isActive ?? false) {
+      _timer?.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
+}
+
 class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
+  final _debouncer = Debouncer(milliseconds: 500);
   List<reportobjmodel>? repobjModels;
+  List<reportobj>? _filterrepobj;
+  List<reportobj>? _repobj;
+
   List<Widget>? repobjCards;
 
   @override
@@ -19,8 +41,44 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
     super.initState();
     repobjModels = [];
     repobjCards = [];
+    _filterrepobj = [];
+    _repobj = [];
     readreportobj();
+    // _getrepobj();
   }
+
+  searchField() {
+    return Padding(
+      padding: EdgeInsets.all(20.0),
+      child: TextField(
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.all(5.0),
+          hintText: 'Filter by Category',
+        ),
+        onChanged: (string) {
+          _debouncer.run(() {
+            setState(() {
+              _filterrepobj = _repobj!
+                  .where((u) => (u.Repobj_name.toString()
+                      .toLowerCase()
+                      .contains(string.toLowerCase())))
+                  .toList();
+            });
+          });
+        },
+      ),
+    );
+  }
+
+  // _getrepobj() {
+  //   repobj_service.getrepobj().then((repobj) {
+  //     setState(() {
+  //       _filterrepobj = repobj;
+  //       _repobj = repobj;
+  //     });
+  //     print("Length ${repobj.length}");
+  //   });
+  // }
 
   Future<Null> readreportobj() async {
     String url =
@@ -84,9 +142,27 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
 
   @override
   Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // searchField(),
+          SizedBox(
+            height: 10,
+          ),
+          databody(),
+        ],
+      ),
+    );
+  }
+
+  databody() {
     return repobjCards!.length == 0
         ? MyStyle().showProgress()
         : GridView.extent(
+            scrollDirection: Axis.vertical,
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.only(left: 20, right: 20),
             maxCrossAxisExtent: 220.0,
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10.0,

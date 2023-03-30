@@ -141,11 +141,11 @@ class _reportobj_screenState extends State<reportobj_screen> {
             backgroundColor: Colors.green,
             textColor: Colors.white,
             fontSize: 16.0);
-        Navigator.push(
+        Navigator.pop(
           context,
-          MaterialPageRoute(
-            builder: (context) => HomeScreen(),
-          ),
+          // MaterialPageRoute(
+          //   builder: (context) => HomeScreen(),
+          // ),
         );
       }
     });
@@ -228,8 +228,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            Navigator.maybePop(context);
           },
         ),
         title: Text(

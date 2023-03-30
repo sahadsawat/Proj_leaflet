@@ -168,7 +168,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
 
     Response response = await Dio().get(url);
     if (response.toString() == 'true') {
-      Navigator.push(
+      Navigator.pop(
         context,
         MaterialPageRoute(
           builder: (context) => HomeApp(),
@@ -195,120 +195,6 @@ class _userprofile_screenState extends State<userprofile_screen> {
     });
   }
 
-  // Widget showContent() => SingleChildScrollView(
-  //       child: Column(
-  //         children: <Widget>[
-  //           user_email(),
-  //           user_password(),
-  //           user_firstname(),
-  //           user_lastname(),
-  //           user_lineid(),
-  //           user_tel()
-  //         ],
-  //       ),
-  //     );
-  // Widget user_email() => Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.only(top: 16.0),
-  //           width: 250.0,
-  //           child: TextFormField(
-  //             onChanged: (value) => useremail = value,
-  //             initialValue: useremail,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Email',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  // Widget user_password() => Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.only(top: 16.0),
-  //           width: 250.0,
-  //           child: TextFormField(
-  //             onChanged: (value) => password = value,
-  //             initialValue: password,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'Email',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  // Widget user_firstname() => Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.only(top: 16.0),
-  //           width: 250.0,
-  //           child: TextFormField(
-  //             onChanged: (value) => firstname = value,
-  //             initialValue: firstname,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'ชื่อของร้าน',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  // Widget user_lastname() => Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.only(top: 16.0),
-  //           width: 250.0,
-  //           child: TextFormField(
-  //             onChanged: (value) => lastname = value,
-  //             initialValue: lastname,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'ชื่อของร้าน',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  // Widget user_tel() => Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.only(top: 16.0),
-  //           width: 250.0,
-  //           child: TextFormField(
-  //             onChanged: (value) => usertel = value,
-  //             initialValue: usertel,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'ชื่อของร้าน',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
-  // Widget user_lineid() => Row(
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       children: <Widget>[
-  //         Container(
-  //           margin: EdgeInsets.only(top: 16.0),
-  //           width: 250.0,
-  //           child: TextFormField(
-  //             onChanged: (value) => userlineid = value,
-  //             initialValue: userlineid,
-  //             decoration: InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               labelText: 'ชื่อของร้าน',
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     );
   @override
   Widget build(BuildContext context) {
     return Scaffold(

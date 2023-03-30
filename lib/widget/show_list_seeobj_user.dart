@@ -76,46 +76,55 @@ class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
         Navigator.push(context, route);
       },
       child: Card(
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ListTile(
+              leading: FittedBox(
+                fit: BoxFit.cover,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                      'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
+                  backgroundColor: Colors.transparent,
+                  minRadius: 50,
+                  maxRadius: 75,
+                ),
+              ),
+              textColor: Colors.black,
+              title: Text(seeobjModel.Seeobj_name),
+              subtitle: Text(seeobjModel.Seeobj_date),
+            ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Container(
-                  width: 100.0,
-                  height: 100.0,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.green,
                   ),
+                  onPressed: () {
+                    MaterialPageRoute route = MaterialPageRoute(
+                      builder: (context) => EditSeeobjUser(
+                        seeobjModel: seeobjModels![index],
+                      ),
+                    );
+                    Navigator.push(context, route)
+                        .then((value) => readseeobj());
+                  },
                 ),
-                SizedBox(
-                  width: 10,
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onPressed: () => deleteseeobj(seeobjModels![index]),
                 ),
-                Container(width: 120, child: Text(seeobjModel.Seeobj_name)),
               ],
-            ),
-            Container(width: 120, child: Text(seeobjModel.Seeobj_date)),
-            IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: Colors.green,
-              ),
-              onPressed: () {
-                MaterialPageRoute route = MaterialPageRoute(
-                  builder: (context) => EditSeeobjUser(
-                    seeobjModel: seeobjModels![index],
-                  ),
-                );
-                Navigator.push(context, route).then((value) => readseeobj());
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: Colors.red,
-              ),
-              onPressed: () => deleteseeobj(seeobjModels![index]),
             ),
           ],
         ),
@@ -142,7 +151,9 @@ class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
 
   Widget showListseeobj() => GridView.count(
         crossAxisCount: 1,
-        // childAspectRatio: (1 / 1),
+        childAspectRatio: (1 / 0.5),
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
         children: seeobjCards!,
@@ -160,12 +171,7 @@ class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
             children: <Widget>[
               TextButton(
                 onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
+                  Navigator.pop(context);
                   String url =
                       'http://10.0.2.2/LeafletDB/deleteSeeobjWhereId.php?isAdd=true&seeobj_id=${seeobjModel.Seeobj_id}';
                   await Dio().get(url).then((value) => readseeobj());

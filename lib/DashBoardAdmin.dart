@@ -10,9 +10,9 @@ import '../widget/show_list_repobj_all.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreenAdmin extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _HomeScreenAdminState createState() => _HomeScreenAdminState();
 }
 
 const kTextStyle = TextStyle(
@@ -21,8 +21,8 @@ const kTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
-class _HomeScreenState extends State<HomeScreen> {
-  int itemIndex = 1;
+class _HomeScreenAdminState extends State<HomeScreenAdmin> {
+  int itemIndex = 0;
   late SharedPreferences logindata;
   String? useremail;
   String? userfirstname;
@@ -46,10 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Widget> widgetList = [
-    MainReportobj(),
     DashBoard(),
+    MainReportobj(),
     MainSeeobj(),
-    // userprofile_screen(),
+    alldbscreens(),
   ];
 
   UserAccountsDrawerHeader showHead() {
@@ -175,14 +175,14 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-            label: "AllReport",
-            icon: Icon(Icons.graphic_eq),
-            backgroundColor: Colors.purple,
-          ),
-          BottomNavigationBarItem(
             label: "Home",
             icon: Icon(Icons.home),
             backgroundColor: Color.fromARGB(255, 10, 185, 100),
+          ),
+          BottomNavigationBarItem(
+            label: "AllReport",
+            icon: Icon(Icons.graphic_eq),
+            backgroundColor: Colors.purple,
           ),
           BottomNavigationBarItem(
             label: "Allfound",
@@ -191,13 +191,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             backgroundColor: Colors.orange,
           ),
-          // BottomNavigationBarItem(
-          //   label: "manage",
-          //   icon: Icon(
-          //     Icons.manage_accounts,
-          //   ),
-          //   backgroundColor: Colors.redAccent,
-          // ),
+          BottomNavigationBarItem(
+            label: "manage",
+            icon: Icon(
+              Icons.manage_accounts,
+            ),
+            backgroundColor: Colors.redAccent,
+          ),
         ],
         currentIndex: itemIndex,
         onTap: (index) {
@@ -206,10 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
             print(index);
           });
         },
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Colors.white,
         unselectedItemColor: Colors.black,
-        // type: BottomNavigationBarType.fixed,
-        // backgroundColor: Colors.blueAccent,
       ),
     );
   }
@@ -253,7 +251,7 @@ class DashBoard extends StatelessWidget {
           child: Column(
             children: [
               Card(
-                color: Colors.purple,
+                color: Colors.purpleAccent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),
@@ -264,9 +262,9 @@ class DashBoard extends StatelessWidget {
                       leading: Icon(
                         Icons.push_pin,
                         size: 50.0,
-                        color: Colors.yellow,
+                        color: Colors.black,
                       ),
-                      textColor: Colors.white,
+                      textColor: Colors.black,
                       title: Text(
                         'หน้าแจ้งของหายของคุณ',
                         style: TextStyle(
@@ -287,10 +285,7 @@ class DashBoard extends StatelessWidget {
                                       builder: (context) =>
                                           MainReportobjUser()));
                             },
-                            child: Text(
-                              "Enter",
-                              style: TextStyle(color: Colors.white),
-                            )),
+                            child: Text("Enter")),
                       ],
                     ),
                     SizedBox(
@@ -311,7 +306,7 @@ class DashBoard extends StatelessWidget {
                       leading: Icon(
                         Icons.push_pin,
                         size: 50.0,
-                        color: Colors.purple,
+                        color: Colors.black,
                       ),
                       textColor: Colors.black,
                       title: Text(

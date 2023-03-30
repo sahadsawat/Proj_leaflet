@@ -137,10 +137,7 @@ class category_screenState extends State<category_screen> {
     _catenameController.text = category.Cate_name;
   }
 
-  // Let's create a DataTable and show the employee list in it.
   SingleChildScrollView _dataBody() {
-    // Both Vertical and Horozontal Scrollview for the DataTable to
-    // scroll both Vertical and Horizontal...
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: SingleChildScrollView(
@@ -214,9 +211,6 @@ class category_screenState extends State<category_screen> {
           hintText: 'Filter by Category',
         ),
         onChanged: (string) {
-          // We will start filtering when the user types in the textfield.
-          // Run the debouncer and start searching
-          // Filter the original List and update the Filter list
           _debouncer.run(() {
             setState(() {
               _filtercategory = _category

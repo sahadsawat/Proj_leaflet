@@ -44,13 +44,13 @@ class _MainReportobjState extends State<MainReportobj> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.purple,
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pop(
+        //         context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        //   },
+        // ),
         title: Text('Report lose Item'),
         // title: Text(userfirstname == null
         //     ? 'Main User'
@@ -62,10 +62,11 @@ class _MainReportobjState extends State<MainReportobj> {
               color: Colors.white,
             ),
             onPressed: () async {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => reportobj_screen()),
-                  (route) => false);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => reportobj_screen()),
+                // (route) => false
+              );
             },
           )
         ],
