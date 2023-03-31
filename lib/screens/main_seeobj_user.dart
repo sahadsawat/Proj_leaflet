@@ -60,10 +60,10 @@ class _MainSeeobjUserState extends State<MainSeeobjUser> {
               color: Colors.white,
             ),
             onPressed: () async {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => seeobj_screen()),
-                  (route) => false);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => seeobj_screen()),
+              );
             },
           )
         ],

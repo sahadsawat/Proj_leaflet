@@ -71,7 +71,6 @@ class _alldbscreensState extends State<alldbscreens> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text("Manage Data จัดการข้อมูลในระบบ"),
         backgroundColor: Colors.redAccent,
       ),

@@ -333,6 +333,46 @@ class DashBoard extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              Card(
+                color: Colors.redAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                elevation: 8,
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      leading: Icon(
+                        Icons.push_pin,
+                        size: 50.0,
+                        color: Colors.black,
+                      ),
+                      textColor: Colors.black,
+                      title: Text(
+                        'หน้าจัดการข้อมูล',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text('หน้าจัดการข้อมูลทั้งหมดในระบบ'),
+                    ),
+                    Row(
+                      children: <Widget>[
+                        TextButton(
+                            style: TextButton.styleFrom(primary: Colors.black),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => alldbscreens()));
+                            },
+                            child: Text("Enter")),
+                      ],
+                    ),
+                  ],
+                ),
               )
             ],
           ),
