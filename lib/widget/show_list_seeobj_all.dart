@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/seeobjmodel.dart';
 import 'package:leaflet_application/screens/showseeobjmenu.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 class ShowListSeeobjAll extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class _ShowListSeeobjAllState extends State<ShowListSeeobjAll> {
 
   Future<Null> readseeobj() async {
     String url =
-        'http://10.0.2.2/LeafletDB/getSeeobjWhereSeeobj.php?isAdd=true&seeobj_status=1';
+        '${MyConstant().domain}/LeafletDB/getSeeobjWhereSeeobj.php?isAdd=true&seeobj_status=1';
     Response response = await Dio().get(url);
     // print('value = $value');
     var result = json.decode(response.data);
@@ -64,7 +65,7 @@ class _ShowListSeeobjAllState extends State<ShowListSeeobjAll> {
               height: 80.0,
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                    'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
+                    '${MyConstant().domain}/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
               ),
             ),
             SizedBox(
@@ -111,8 +112,8 @@ class MyStyle {
 
   Widget showProgress() {
     return Center(
-        // child: CircularProgressIndicator(),
-        );
+      child: CircularProgressIndicator(),
+    );
   }
 
   TextStyle mainTitle = TextStyle(

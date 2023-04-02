@@ -5,9 +5,10 @@ import 'package:http/http.dart'
 import 'package:leaflet_application/models/reportobj.dart';
 import 'package:leaflet_application/models/location.dart';
 import 'package:leaflet_application/models/seeobj.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 class seeobj_service {
-  static const String ROOT = 'http://10.0.2.2/LeafletDB/seeobj_action.php';
+  static String ROOT = '${MyConstant().domain}/LeafletDB/seeobj_action.php';
   // static const _CREATE_TABLE_ACTION = 'CREATE_TABLE';
   static const _GET_ALL_ACTION = 'GET_ALL';
   static const _GET_ALL_ACTION2 = 'GET_ALL2';

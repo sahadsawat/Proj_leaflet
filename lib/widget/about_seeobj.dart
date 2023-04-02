@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:leaflet_application/models/seeobjmodel.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 class Aboutseeobj extends StatefulWidget {
   final seeobjmodel? seeobjModel;
@@ -32,7 +33,7 @@ class _AboutseeobjState extends State<Aboutseeobj> {
                 width: 150.0,
                 height: 150.0,
                 child: Image.network(
-                  'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel!.urlPathImage}',
+                  '${MyConstant().domain}/LeafletDB/seeimage/${seeobjModel!.urlPathImage}',
                   fit: BoxFit.cover,
                 ),
               ),

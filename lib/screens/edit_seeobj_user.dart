@@ -12,6 +12,7 @@ import 'package:leaflet_application/controller/cate_service.dart';
 import 'package:leaflet_application/controller/locat_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 // import 'package:ungfood/utility/normal_dialog.dart';
 
@@ -279,7 +280,7 @@ class _EditSeeobjUserState extends State<EditSeeobjUser> {
 
   Future<Null> editValueOnMySQL() async {
     if (fileimage != null) {
-      String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage2.php';
+      String urlUpload = '${MyConstant().domain}/LeafletDB/saveimage2.php';
       Random random = Random();
       int i = random.nextInt(1000000);
       String? nameFile = 'seeobj$i.jpg';
@@ -289,11 +290,12 @@ class _EditSeeobjUserState extends State<EditSeeobjUser> {
       FormData formData = FormData.fromMap(map);
       await Dio().post(urlUpload, data: formData);
       String urlPathImage = '$nameFile';
-      print('urlPathImage = http://10.0.2.2/LeafletDB/seeimage/$urlPathImage');
+      print(
+          'urlPathImage = ${MyConstant().domain}/LeafletDB/seeimage/$urlPathImage');
       String seeobjid = seeobjModel!.Seeobj_id;
       String userid = seeobjModel!.User_id;
       String url =
-          'http://10.0.2.2/LeafletDB/editSeeobjWhereId.php?isAdd=true&seeobj_id=$seeobjid&seeobj_name=$seeobjname&seeobj_photo=$urlPathImage&seeobj_status=$seeobjstatus&seeobj_detail=$seeobjdetail&seeobj_date=$seeobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
+          '${MyConstant().domain}/LeafletDB/editSeeobjWhereId.php?isAdd=true&seeobj_id=$seeobjid&seeobj_name=$seeobjname&seeobj_photo=$urlPathImage&seeobj_status=$seeobjstatus&seeobj_detail=$seeobjdetail&seeobj_date=$seeobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
           Navigator.pop(
@@ -305,7 +307,7 @@ class _EditSeeobjUserState extends State<EditSeeobjUser> {
       String seeobjid = seeobjModel!.Seeobj_id;
       String userid = seeobjModel!.User_id;
       String url =
-          'http://10.0.2.2/LeafletDB/editSeeobjWhereId.php?isAdd=true&seeobj_id=$seeobjid&seeobj_name=$seeobjname&seeobj_photo=$urlPathImage&seeobj_status=$seeobjstatus&seeobj_detail=$seeobjdetail&seeobj_date=$seeobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
+          '${MyConstant().domain}/LeafletDB/editSeeobjWhereId.php?isAdd=true&seeobj_id=$seeobjid&seeobj_name=$seeobjname&seeobj_photo=$urlPathImage&seeobj_status=$seeobjstatus&seeobj_detail=$seeobjdetail&seeobj_date=$seeobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
           Navigator.pop(
@@ -326,7 +328,7 @@ class _EditSeeobjUserState extends State<EditSeeobjUser> {
             height: 200.0,
             child: fileimage == null
                 ? Image.network(
-                    'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel!.urlPathImage}',
+                    '${MyConstant().domain}/LeafletDB/seeimage/${seeobjModel!.urlPathImage}',
                     fit: BoxFit.cover,
                   )
                 : Image.file(fileimage!),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:leaflet_application/models/faculty.dart';
 import 'package:leaflet_application/screens/userprofile_edit_screen.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -84,7 +85,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
     print('user_id ==>> $userid');
 
     String url =
-        'http://10.0.2.2/LeafletDB/getUserWhereId.php?isAdd=true&user_id=$userid';
+        '${MyConstant().domain}/LeafletDB/getUserWhereId.php?isAdd=true&user_id=$userid';
 
     Response response = await Dio().get(url);
     print('response ==>> $response');
@@ -164,7 +165,7 @@ class _userprofile_screenState extends State<userprofile_screen> {
   Future<Null> editThread() async {
     String userid = userModel!.User_id;
     String url =
-        'http://10.0.2.2/LeafletDB/editUserWhereId.php?isAdd=true&user_id=$userid&user_email=$useremail&user_password=$password&first_name=$firstname&last_name=$lastname&user_tel=$usertel&user_lineid=$userlineid&major_id=$_selectedmajorName';
+        '${MyConstant().domain}/LeafletDB/editUserWhereId.php?isAdd=true&user_id=$userid&user_email=$useremail&user_password=$password&first_name=$firstname&last_name=$lastname&user_tel=$usertel&user_lineid=$userlineid&major_id=$_selectedmajorName';
 
     Response response = await Dio().get(url);
     if (response.toString() == 'true') {

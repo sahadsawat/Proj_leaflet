@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "leaflet_application" "\0"
+            VALUE "FileDescription", "LeafLet" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "leaflet_application" "\0"
+            VALUE "InternalName", "LeafLet" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
             VALUE "OriginalFilename", "leaflet_application.exe" "\0"
-            VALUE "ProductName", "leaflet_application" "\0"
+            VALUE "ProductName", "LeafLet" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

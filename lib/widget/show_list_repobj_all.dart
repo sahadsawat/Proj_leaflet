@@ -7,6 +7,7 @@ import 'package:leaflet_application/models/reportobj.dart';
 import 'package:leaflet_application/models/reportobjmodel.dart';
 import 'package:leaflet_application/screens/showreportobjmenu.dart';
 import 'package:leaflet_application/controller/reportobj_service.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 class ShowListRepobjAll extends StatefulWidget {
   @override
@@ -29,12 +30,18 @@ class Debouncer {
 }
 
 class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
-  final _debouncer = Debouncer(milliseconds: 500);
+  final _debouncer = Debouncer(milliseconds: 2000);
   List<reportobjmodel>? repobjModels;
   List<reportobj>? _filterrepobj;
   List<reportobj>? _repobj;
 
   List<Widget>? repobjCards;
+  ScrollController scrollController = ScrollController();
+  int amoutgrid = 6;
+
+  final List<Map> myProducts =
+      List.generate(100000, (index) => {"id": index, "name": "Product $index"})
+          .toList();
 
   @override
   void initState() {
@@ -44,31 +51,42 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
     _filterrepobj = [];
     _repobj = [];
     readreportobj();
+
+    // scrollController.addListener(() {
+    //   if (scrollController.position.pixels ==
+    //       scrollController.position.maxScrollExtent) {
+    //     print('at the end');
+    //     setState(() {
+    //       amoutgrid = amoutgrid + 2;
+    //     });
+    //   }
+    // });
+
     // _getrepobj();
   }
 
-  searchField() {
-    return Padding(
-      padding: EdgeInsets.all(20.0),
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.all(5.0),
-          hintText: 'Filter by Category',
-        ),
-        onChanged: (string) {
-          _debouncer.run(() {
-            setState(() {
-              _filterrepobj = _repobj!
-                  .where((u) => (u.Repobj_name.toString()
-                      .toLowerCase()
-                      .contains(string.toLowerCase())))
-                  .toList();
-            });
-          });
-        },
-      ),
-    );
-  }
+  // searchField() {
+  //   return Padding(
+  //     padding: EdgeInsets.all(20.0),
+  //     child: TextField(
+  //       decoration: InputDecoration(
+  //         contentPadding: EdgeInsets.all(5.0),
+  //         hintText: 'Filter by Category',
+  //       ),
+  //       onChanged: (string) {
+  //         _debouncer.run(() {
+  //           setState(() {
+  //             _filterrepobj = _repobj!
+  //                 .where((u) => (u.Repobj_name.toString()
+  //                     .toLowerCase()
+  //                     .contains(string.toLowerCase())))
+  //                 .toList();
+  //           });
+  //         });
+  //       },
+  //     ),
+  //   );
+  // }
 
   // _getrepobj() {
   //   repobj_service.getrepobj().then((repobj) {
@@ -80,11 +98,34 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
   //   });
   // }
 
-  Future<Null> readreportobj() async {
+  // Future<void> readreportobj(index) async {
+  //   String url =
+  //       '${MyConstant().domain}/LeafletDB/getRepobjWhereRepobj.php?isAdd=true&reportobj_status=1';
+  //   Response response = await Dio().get(url);
+  //   print('value = $response');
+  //   var result = json.decode(response.data);
+  //   int index = 0;
+  //   for (var map in result) {
+  //     reportobjmodel repobj = reportobjmodel.fromJson(map);
+
+  //     String repobjname = repobj.Repobj_name;
+  //     if (repobjname.isNotEmpty) {
+  //       // print('repobjname = ${repobj.Repobj_name}');
+  //       _debouncer.run(() {
+  //         setState(() {
+  //           repobjModels!.add(repobj);
+  //           repobjCards!.add(createCard(repobj, index));
+  //           index++;
+  //         });
+  //       });
+  //     }
+  //   }
+  // }
+  Future<void> readreportobj() async {
     String url =
-        'http://10.0.2.2/LeafletDB/getRepobjWhereRepobj.php?isAdd=true&reportobj_status=1';
+        '${MyConstant().domain}/LeafletDB/getRepobjWhereRepobj.php?isAdd=true&reportobj_status=1';
     Response response = await Dio().get(url);
-    // print('value = $value');
+    print('value = $response');
     var result = json.decode(response.data);
     int index = 0;
     for (var map in result) {
@@ -93,10 +134,12 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
       String repobjname = repobj.Repobj_name;
       if (repobjname.isNotEmpty) {
         // print('repobjname = ${repobj.Repobj_name}');
+
         setState(() {
           repobjModels!.add(repobj);
           repobjCards!.add(createCard(repobj, index));
           index++;
+          // repobjModels!.add(repobj);
         });
       }
     }
@@ -123,8 +166,15 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
               width: 80.0,
               height: 80.0,
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+                backgroundColor: Colors.red,
+                radius: 65,
+                backgroundImage: AssetImage('images/logo.png'),
+                child: CircleAvatar(
+                  radius: 65,
+                  backgroundColor: Colors.transparent,
+                  backgroundImage: NetworkImage(
+                      '${MyConstant().domain}/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+                ),
               ),
             ),
             SizedBox(
@@ -155,17 +205,51 @@ class _ShowListRepobjAllState extends State<ShowListRepobjAll> {
     );
   }
 
+  // Widget showimage(int index) {
+  //   return Container(
+  //     width: MediaQuery.of(context).size.width *0.5,
+  //     child: Image.network('${MyConstant().domain}/LeafletDB/reportimage/${repobjModel.urlPathImage}'),
+  //   );
+  // }
+
+  // Widget showgridview(int index) {
+  //   return Row(
+  //     children: [],
+  //   );
+  // }
+
+  // Widget show() {
+  //   return GridView.builder(
+  //       controller: scrollController,
+  //       itemCount: amoutgrid,
+  //       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+  //           maxCrossAxisExtent: 200,
+  //           childAspectRatio: 3 / 2,
+  //           crossAxisSpacing: 20,
+  //           mainAxisSpacing: 20),
+  //       itemBuilder: (BuildContext ctx, index) {
+  //         return showgridview(index);
+  //       });
+  // }
+
   databody() {
     return repobjCards!.length == 0
         ? MyStyle().showProgress()
-        : GridView.extent(
+        : GridView.count(
+            crossAxisCount: 2,
+            crossAxisSpacing: 2.0,
+            mainAxisSpacing: 2.0,
+            shrinkWrap: true,
             scrollDirection: Axis.vertical,
             physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            padding: EdgeInsets.only(left: 20, right: 20),
-            maxCrossAxisExtent: 220.0,
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
+            //     //     // .extent(
+            //     //     //     scrollDirection: Axis.vertical,
+            //     //     //     physics: NeverScrollableScrollPhysics(),
+            //     //     //     shrinkWrap: true,
+            //     //     //     padding: EdgeInsets.only(left: 20, right: 20),
+            //     //     //     maxCrossAxisExtent: 220.0,
+            //     //     //     mainAxisSpacing: 10.0,
+            //     //     //     crossAxisSpacing: 10.0,
             children: repobjCards!,
           );
   }
@@ -176,9 +260,9 @@ class MyStyle {
   Color primaryColor = Colors.green;
 
   Widget showProgress() {
-    return Center(
-        // child: CircularProgressIndicator(),
-        );
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
   }
 
   TextStyle mainTitle = TextStyle(

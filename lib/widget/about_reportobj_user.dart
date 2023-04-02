@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:leaflet_application/models/reportobjmodel.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 class Aboutrepobjuser extends StatefulWidget {
   final reportobjmodel? repobjModel;
@@ -33,7 +34,7 @@ class _AboutrepobjuserState extends State<Aboutrepobjuser> {
                 width: 150.0,
                 height: 150.0,
                 child: Image.network(
-                  'http://10.0.2.2/LeafletDB/reportimage/${repobjModel!.urlPathImage}',
+                  '${MyConstant().domain}/LeafletDB/reportimage/${repobjModel!.urlPathImage}',
                   fit: BoxFit.cover,
                 ),
               ),

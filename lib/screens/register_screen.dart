@@ -12,6 +12,7 @@ import 'package:leaflet_application/models/major2.dart';
 import 'package:leaflet_application/models/major3.dart';
 import 'package:leaflet_application/controller/ma_service.dart';
 import 'package:leaflet_application/screens/login_screen.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 class Register_screen extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _Register_screenState extends State<Register_screen> {
   }
 
   Future register() async {
-    var url = "http://10.0.2.2/LeafletDB/register_action.php";
+    var url = "${MyConstant().domain}/LeafletDB/register_action.php";
     var response = await http.post(Uri.parse(url), body: {
       "user_email": useremail.text,
       "user_password": password.text,

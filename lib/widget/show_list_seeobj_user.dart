@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:leaflet_application/DashBoard.dart';
 import 'package:leaflet_application/screens/edit_seeobj_user.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
     String url =
-        'http://10.0.2.2/LeafletDB/getSeeobjWhereUser.php?isAdd=true&user_id=$userid';
+        '${MyConstant().domain}/LeafletDB/getSeeobjWhereUser.php?isAdd=true&user_id=$userid';
     await Dio().get(url).then((value) {
       setState(() {
         loadStatus = false;
@@ -89,7 +90,7 @@ class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
                 fit: BoxFit.cover,
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(
-                      'http://10.0.2.2/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
+                      '${MyConstant().domain}/LeafletDB/seeimage/${seeobjModel.urlPathImage}'),
                   backgroundColor: Colors.transparent,
                   minRadius: 50,
                   maxRadius: 75,
@@ -173,7 +174,7 @@ class _ShowListSeeobjUserState extends State<ShowListSeeobjUser> {
                 onPressed: () async {
                   Navigator.pop(context);
                   String url =
-                      'http://10.0.2.2/LeafletDB/deleteSeeobjWhereId.php?isAdd=true&seeobj_id=${seeobjModel.Seeobj_id}';
+                      '${MyConstant().domain}/LeafletDB/deleteSeeobjWhereId.php?isAdd=true&seeobj_id=${seeobjModel.Seeobj_id}';
                   await Dio().get(url).then((value) => readseeobj());
                 },
                 child: Text('ยืนยัน'),

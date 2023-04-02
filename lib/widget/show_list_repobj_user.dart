@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:leaflet_application/DashBoard.dart';
 import 'package:leaflet_application/screens/edit_repobj_user.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
     String url =
-        'http://10.0.2.2/LeafletDB/getRepobjWhereUser.php?isAdd=true&user_id=$userid';
+        '${MyConstant().domain}/LeafletDB/getRepobjWhereUser.php?isAdd=true&user_id=$userid';
     await Dio().get(url).then((value) {
       setState(() {
         loadStatus = false;
@@ -90,7 +91,7 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
                 fit: BoxFit.cover,
                 child: CircleAvatar(
                   backgroundImage: NetworkImage(
-                    'http://10.0.2.2/LeafletDB/reportimage/${repobjModel.urlPathImage}',
+                    '${MyConstant().domain}/LeafletDB/reportimage/${repobjModel.urlPathImage}',
                   ),
                   backgroundColor: Colors.transparent,
                   minRadius: 50,
@@ -182,7 +183,7 @@ class _ShowListRepobjUserState extends State<ShowListRepobjUser> {
                     context,
                   );
                   String url =
-                      'http://10.0.2.2/LeafletDB/deleteRepobjWhereId.php?isAdd=true&reportobj_id=${repobjModel.Repobj_id}';
+                      '${MyConstant().domain}/LeafletDB/deleteRepobjWhereId.php?isAdd=true&reportobj_id=${repobjModel.Repobj_id}';
                   await Dio().get(url).then((value) => readreportobj());
                 },
                 child: Text('ยืนยัน'),

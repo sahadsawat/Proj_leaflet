@@ -12,6 +12,7 @@ import 'package:leaflet_application/controller/cate_service.dart';
 import 'package:leaflet_application/controller/locat_service.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 
 // import 'package:ungfood/utility/normal_dialog.dart';
 
@@ -279,7 +280,7 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
 
   Future<Null> editValueOnMySQL() async {
     if (fileimage != null) {
-      String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage.php';
+      String urlUpload = '${MyConstant().domain}/LeafletDB/saveimage.php';
       Random random = Random();
       int i = random.nextInt(1000000);
       String? nameFile = 'repobj$i.jpg';
@@ -290,11 +291,11 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
       await Dio().post(urlUpload, data: formData);
       String urlPathImage = '$nameFile';
       print(
-          'urlPathImage = http://10.0.2.2/LeafletDB/reportimage/$urlPathImage');
+          'urlPathImage = ${MyConstant().domain}/LeafletDB/reportimage/$urlPathImage');
       String repobjid = repobjModel!.Repobj_id;
       String userid = repobjModel!.User_id;
       String url =
-          'http://10.0.2.2/LeafletDB/editRepobjWhereId.php?isAdd=true&reportobj_id=$repobjid&reportobj_name=$repobjname&reportobj_photo=$urlPathImage&reportobj_status=$repobjstatus&reportobj_detail=$repobjdetail&reportobj_date=$repobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
+          '${MyConstant().domain}/LeafletDB/editRepobjWhereId.php?isAdd=true&reportobj_id=$repobjid&reportobj_name=$repobjname&reportobj_photo=$urlPathImage&reportobj_status=$repobjstatus&reportobj_detail=$repobjdetail&reportobj_date=$repobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
           Navigator.pop(
@@ -308,7 +309,7 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
       String repobjid = repobjModel!.Repobj_id;
       String userid = repobjModel!.User_id;
       String url =
-          'http://10.0.2.2/LeafletDB/editRepobjWhereId.php?isAdd=true&reportobj_id=$repobjid&reportobj_name=$repobjname&reportobj_photo=$urlPathImage&reportobj_status=$repobjstatus&reportobj_detail=$repobjdetail&reportobj_date=$repobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
+          '${MyConstant().domain}/LeafletDB/editRepobjWhereId.php?isAdd=true&reportobj_id=$repobjid&reportobj_name=$repobjname&reportobj_photo=$urlPathImage&reportobj_status=$repobjstatus&reportobj_detail=$repobjdetail&reportobj_date=$repobjdate&cate_id=$_selectedcateName&locat_id=$_selectedlocatName&user_id=$userid';
       await Dio().get(url).then((value) {
         if (value.toString() == 'true') {
           Navigator.pop(
@@ -329,7 +330,7 @@ class _EditRepobjUserState extends State<EditRepobjUser> {
             height: 200.0,
             child: fileimage == null
                 ? Image.network(
-                    'http://10.0.2.2/LeafletDB/reportimage/${repobjModel!.urlPathImage}',
+                    '${MyConstant().domain}/LeafletDB/reportimage/${repobjModel!.urlPathImage}',
                     fit: BoxFit.cover,
                   )
                 : Image.file(fileimage!),

@@ -16,6 +16,7 @@ import 'package:leaflet_application/models/location.dart';
 import 'package:leaflet_application/screens/main_repobj.dart';
 
 import 'package:dio/dio.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class reportobj_screen extends StatefulWidget {
@@ -97,7 +98,7 @@ class _reportobj_screenState extends State<reportobj_screen> {
   // }
 
   _addreportobj() async {
-    String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage.php';
+    String urlUpload = '${MyConstant().domain}/LeafletDB/saveimage.php';
     Random random = Random();
     int i = random.nextInt(1000000);
     String nameFile = 'repobj$i.jpg';
@@ -107,7 +108,8 @@ class _reportobj_screenState extends State<reportobj_screen> {
     FormData formData = FormData.fromMap(map);
     await Dio().post(urlUpload, data: formData);
     String urlPathImage = '$nameFile';
-    print('urlPathImage = http://10.0.2.2/LeafletDB/reportimage/$urlPathImage');
+    print(
+        'urlPathImage = ${MyConstant().domain}/LeafletDB/reportimage/$urlPathImage');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
     if (repobjname.text.isEmpty ||

@@ -7,6 +7,7 @@ import 'package:leaflet_application/screens/register_screen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:leaflet_application/DashBoard.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:leaflet_application/models/user.dart';
 import 'package:leaflet_application/screens/main_repobj.dart';
@@ -52,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<Null> checkAuthen() async {
     String url =
-        'http://10.0.2.2/LeafletDB/getUserWhereUser.php?isAdd=true&user_email=$useremail';
+        '${MyConstant().domain}/LeafletDB/getUserWhereUser.php?isAdd=true&user_email=$useremail';
     print('url ===>> $url');
     try {
       Response response = await Dio().get(url);

@@ -14,6 +14,7 @@ import 'package:leaflet_application/controller/locat_service.dart';
 import 'package:leaflet_application/controller/seeobj_service.dart';
 import 'package:leaflet_application/models/location.dart';
 import 'package:dio/dio.dart';
+import 'package:leaflet_application/utility/my_constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class seeobj_screen extends StatefulWidget {
@@ -49,7 +50,7 @@ class _seeobj_screenState extends State<seeobj_screen> {
   }
 
   _addseeobj() async {
-    String urlUpload = 'http://10.0.2.2/LeafletDB/saveimage2.php';
+    String urlUpload = '${MyConstant().domain}/LeafletDB/saveimage2.php';
     Random random = Random();
     int i = random.nextInt(1000000);
     String nameFile = 'seeobj$i.jpg';
@@ -59,7 +60,8 @@ class _seeobj_screenState extends State<seeobj_screen> {
     FormData formData = FormData.fromMap(map);
     await Dio().post(urlUpload, data: formData);
     String urlPathImage = '$nameFile';
-    print('urlPathImage = http://10.0.2.2/LeafletDB/seeimage/$urlPathImage');
+    print(
+        'urlPathImage = ${MyConstant().domain}/LeafletDB/seeimage/$urlPathImage');
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String? userid = preferences.getString('user_id');
     if (seeobjname.text.isEmpty) {
