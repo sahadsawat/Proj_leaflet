@@ -42,7 +42,7 @@ class _AboutseeobjuserState extends State<Aboutseeobjuser> {
           ),
           ListTile(
             leading: Icon(Icons.home),
-            title: Text("ชื่อของที่ตามหา"),
+            title: Text("ชื่อสิ่งของที่พบเห็น"),
             subtitle: Text(seeobjModel!.Seeobj_name,
                 style: TextStyle(
                     fontSize: 15,
@@ -56,7 +56,7 @@ class _AboutseeobjuserState extends State<Aboutseeobjuser> {
           ),
           ListTile(
             leading: Icon(Icons.update),
-            title: Text("เวลาที่ของหาย"),
+            title: Text("เวลาที่พบสิ่งของ"),
             subtitle: Text(seeobjModel!.Seeobj_date),
           ),
           ListTile(
@@ -71,9 +71,14 @@ class _AboutseeobjuserState extends State<Aboutseeobjuser> {
           ),
           ListTile(
             leading: Icon(Icons.email),
-            title: Text("Emailผู้แจ้งหา"),
+            title: Text("Emailผู้พบเห็น"),
             subtitle: Text(seeobjModel!.User_email),
           ),
+          // ListTile(
+          //   leading: Icon(Icons.phone),
+          //   title: Text("เบอร์โทรศัพท์"),
+          //   subtitle: Text(seeobjModel!.User_tel),
+          // ),
         ],
       ),
     );

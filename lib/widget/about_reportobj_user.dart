@@ -74,6 +74,11 @@ class _AboutrepobjuserState extends State<Aboutrepobjuser> {
             title: Text("Emailผู้แจ้งหา"),
             subtitle: Text(repobjModel!.User_email),
           ),
+          // ListTile(
+          //   leading: Icon(Icons.phone),
+          //   title: Text("เบอร์โทรศัพท์"),
+          //   subtitle: Text(repobjModel!.User_tel),
+          // ),
         ],
       ),
     );

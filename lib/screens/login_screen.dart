@@ -65,9 +65,10 @@ class _LoginPageState extends State<LoginPage> {
         User user = User.fromJson(map);
         if (password == user.User_password) {
           String statususer = user.User_email;
-          if (statususer == 'admin@gmail.com') {
+          if (statususer == 'admin@gmail.com' ||
+              statususer == 'employee@gmail.com') {
             Fluttertoast.showToast(
-                msg: "Login Status Admin successful",
+                msg: "Login successful",
                 toastLength: Toast.LENGTH_SHORT,
                 gravity: ToastGravity.CENTER,
                 timeInSecForIosWeb: 1,

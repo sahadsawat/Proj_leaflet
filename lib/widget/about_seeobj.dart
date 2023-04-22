@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:leaflet_application/models/seeobjmodel.dart';
 import 'package:leaflet_application/utility/my_constant.dart';
 
@@ -40,29 +39,44 @@ class _AboutseeobjState extends State<Aboutseeobj> {
             ],
           ),
           ListTile(
-            // leading: Icon(Icons.home),
-            title: Text(seeobjModel!.Seeobj_name),
+            leading: Icon(Icons.home),
+            title: Text("ชื่อสิ่งของที่พบเห็น"),
+            subtitle: Text(seeobjModel!.Seeobj_name,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black)),
           ),
           ListTile(
-            // leading: Icon(Icons.phone),
-            title: Text(seeobjModel!.Seeobj_detail),
+            leading: Icon(Icons.details),
+            title: Text("รายละเอียด"),
+            subtitle: Text(seeobjModel!.Seeobj_detail),
           ),
           ListTile(
-            // leading: Icon(Icons.phone),
-            title: Text(seeobjModel!.Seeobj_date),
+            leading: Icon(Icons.update),
+            title: Text("เวลาที่พบสิ่งของ"),
+            subtitle: Text(seeobjModel!.Seeobj_date),
           ),
           ListTile(
-            // leading: Icon(Icons.phone),
-            title: Text(seeobjModel!.Cate_name),
+            leading: Icon(Icons.category),
+            title: Text("ประเภท หมวดหมู่"),
+            subtitle: Text(seeobjModel!.Cate_name),
           ),
           ListTile(
-            // leading: Icon(Icons.phone),
-            title: Text(seeobjModel!.Locat_name),
+            leading: Icon(Icons.map),
+            title: Text("สถานที่"),
+            subtitle: Text(seeobjModel!.Locat_name),
           ),
           ListTile(
-            // leading: Icon(Icons.phone),
-            title: Text(seeobjModel!.User_email),
+            leading: Icon(Icons.email),
+            title: Text("Emailผู้พบเห็น"),
+            subtitle: Text(seeobjModel!.User_email),
           ),
+          // ListTile(
+          //   leading: Icon(Icons.phone),
+          //   title: Text("เบอร์โทรศัพท์"),
+          //   subtitle: Text(seeobjModel!.User_tel),
+          // ),
         ],
       ),
     );
